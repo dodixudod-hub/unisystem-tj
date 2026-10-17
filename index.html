@@ -125,10 +125,20 @@ footer{text-align:center;padding:25px;color:#64748b;font-size:13px}
 <script>const SUPABASE_URL = "https://tvokddgcrbmmvxzubnlp.supabase.co";
 const SUPABASE_KEY = "sb_publishable_L9Mk_uOqwfv5qPXo_L2NHA_FxCuv7qr";
 
-const supabase = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
+let supabase = null;
+
+try {
+  if (window.supabase) {
+    supabase = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
+  } else {
+    console.error("Supabase library loaded нашуд");
+  }
+} catch (error) {
+  console.error("Supabase error:", error);
+}
 const keys = {
 students: 'unisystem_students',
 lessons: 'unisystem_lessons',
