@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="tg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UniSystem TJ</title>
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f1f5f9;color:#172554}
+header{background:#123c75;color:white;text-align:center;padding:25px 12px}
+header h1{margin:0 0 10px}
+nav{background:#0b2850;padding:12px;display:flex;justify-content:center;flex-wrap:wrap;gap:8px}
+nav button{background:transparent;color:white;border:0;padding:10px;cursor:pointer;font-size:15px}
+.container{max-width:950px;margin:25px auto;padding:15px}
+.welcome,.panel{background:white;padding:22px;border-radius:14px;margin-bottom:20px;box-shadow:0 3px 12px #0001}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.card{background:white;border:2px solid transparent;border-radius:14px;padding:22px 10px;text-align:center;cursor:pointer;box-shadow:0 3px 12px #0001}
+.card:active{border-color:#2563eb}
+.symbol{font-size:34px;margin-bottom:10px}
+.card h3{margin:5px 0}
+.panel{display:none}
+.panel h2{color:#123c75}
+input,select{width:100%;padding:12px;margin:7px 0;border:1px solid #cbd5e1;border-radius:8px;font-size:16px}
+.action{background:#123c75;color:white;border:0;border-radius:8px;padding:12px 16px;margin:7px 3px 7px 0;cursor:pointer}
+.delete{background:#dc2626;color:white;border:0;border-radius:6px;padding:8px;margin-top:8px}
+.item{background:#f1f5f9;border-radius:8px;padding:12px;margin:10px 0;overflow-wrap:anywhere}
+.back{background:#64748b}
+footer{text-align:center;padding:25px;color:#64748b;font-size:13px}
+.notice{background:#dbeafe;padding:15px;border-radius:10px;margin-top:20px}
+@media(min-width:600px){.cards{grid-template-columns:repeat(4,minmax(0,1fr))}}
+</style>
+</head>
+
+<body>
+<header>
+<h1>🎓 UniSystem TJ</h1>
+<p>Донишгоҳи инноватсионии шаҳри Кӯлоб</p>
+</header>
+
+<nav>
+<button onclick="goHome()">Асосӣ</button>
+<button onclick="openPanel('students')">Донишҷӯён</button>
+<button onclick="openPanel('lessons')">Дарсҳо</button>
+<button onclick="openPanel('grades')">Баҳоҳо</button>
+<button onclick="openPanel('teachers')">Омӯзгорон</button>
+</nav>
+
+<main class="container">
+<section id="home">
+<div class="welcome">
+<h2>Хуш омадед!</h2>
+<p>Системаи рақамии идоракунии донишгоҳ</p>
+<p>Қисми лозимаро интихоб кунед.</p>
+</div>
+
+<div class="cards">
+<div class="card" onclick="openPanel('students')">
+<div class="symbol">👨‍🎓</div><h3>Донишҷӯён</h3><p>Рӯйхат ва гурӯҳҳо</p>
+</div>
+<div class="card" onclick="openPanel('lessons')">
+<div class="symbol">📚</div><h3>Дарсҳо</h3><p>Фанҳои таълимӣ</p>
+</div>
+<div class="card" onclick="openPanel('grades')">
+<div class="symbol">📊</div><h3>Баҳоҳо</h3><p>Натиҷаҳои таҳсил</p>
+</div>
+<div class="card" onclick="openPanel('teachers')">
+<div class="symbol">👨‍🏫</div><h3>Омӯзгорон</h3><p>Рӯйхати омӯзгорон</p>
+</div>
+</div>
+
+<div class="notice">📢 Версияи ибтидоии UniSystem TJ</div>
+</section>
+
+<section id="students" class="panel">
+<h2>👨‍🎓 Донишҷӯён</h2>
+<form id="studentForm">
+<input id="studentName" placeholder="Ному насаби донишҷӯ" required>
+<input id="studentGroup" placeholder="Гурӯҳи донишҷӯ" required>
+<button class="action">+ Илова кардани донишҷӯ</button>
+</form>
+<div id="studentList"></div>
+<button class="action back" onclick="goHome()">Бозгашт</button>
+</section>
+
+<section id="lessons" class="panel">
+<h2>📚 Дарсҳо</h2>
+<form id="lessonForm">
+<input id="lessonName" placeholder="Номи фан" required>
+<input id="lessonTeacher" placeholder="Номи омӯзгор" required>
+<input id="lessonGroup" placeholder="Гурӯҳ" required>
+<button class="action">+ Илова кардани фан</button>
+</form>
+<div id="lessonList"></div>
+<button class="action back" onclick="goHome()">Бозгашт</button>
+</section>
+
+<section id="grades" class="panel">
+<h2>📊 Баҳоҳо</h2>
+<form id="gradeForm">
+<input id="gradeStudent" placeholder="Номи донишҷӯ" required>
+<input id="gradeSubject" placeholder="Номи фан" required>
+<input id="gradeValue" type="number" min="0" max="100" placeholder="Баҳо (0–100)" required>
+<button class="action">+ Илова кардани баҳо</button>
+</form>
+<div id="gradeList"></div>
+<button class="action back" onclick="goHome()">Бозгашт</button>
+</section>
+
+<section id="teachers" class="panel">
+<h2>👨‍🏫 Омӯзгорон</h2>
+<form id="teacherForm">
+<input id="teacherName" placeholder="Ному насаби омӯзгор" required>
+<input id="teacherSubject" placeholder="Фани таълимӣ" required>
+<button class="action">+ Илова кардани омӯзгор</button>
+</form>
+<div id="teacherList"></div>
+<button class="action back" onclick="goHome()">Бозгашт</button>
+</section>
+</main>
+
+<footer>UniSystem TJ © 2026</footer>
+
+<script>
+const keys = {
+students: 'unisystem_students',
+lessons: 'unisystem_lessons',
+grades: 'unisystem_grades',
+teachers: 'unisystem_teachers'
+};
+
+function load(key) {
+try { return JSON.parse(localStorage.getItem(keys[key]) || '[]'); }
+catch(e) { return []; }
+}
+
+function save(key, data) {
+localStorage.setItem(keys[key], JSON.stringify(data));
+}
+
+function openPanel(id) {
+document.getElementById('home').style.display = 'none';
+document.querySelectorAll('.panel').forEach(p => p.style.display = 'none');
+document.getElementById(id).style.display = 'block';
+window.scrollTo(0, 0);
+}
+
+function goHome() {
+document.querySelectorAll('.panel').forEach(p => p.style.display = 'none');
+document.getElementById('home').style.display = 'block';
+window.scrollTo(0, 0);
+}
+
+function render(key, elementId, fields) {
+const container = document.getElementById(elementId);
+container.replaceChildren();
+const data = load(key);
+
+data.forEach((record, index) => {
+const item = document.createElement('div');
+item.className = 'item';
+
+const text = document.createElement('div');
+text.textContent = (index + 1) + '. ' +
+fields.map(field => field.label + ': ' + record[field.name]).join(' | ');
+
+const del = document.createElement('button');
+del.className = 'delete';
+del.textContent = 'Нест кардан';
+del.onclick = () => {
+const updated = load(key);
+updated.splice(index, 1);
+save(key, updated);
+render(key, elementId, fields);
+};
+
+item.append(text, del);
+container.append(item);
+});
+}
+
+function setup(formId, key, fields, listId) {
+const form = document.getElementById(formId);
+
+form.addEventListener('submit', event => {
+event.preventDefault();
+
+const record = {};
+for (const field of fields) {
+record[field.name] = document.getElementById(field.input).value.trim();
+}
+
+const data = load(key);
+data.push(record);
+save(key, data);
+form.reset();
+render(key, listId, fields);
+});
+}
+
+const studentFields = [
+{name:'name',input:'studentName',label:'Ном'},
+{name:'group',input:'studentGroup',label:'Гурӯҳ'}
+];
+
+const lessonFields = [
+{name:'name',input:'lessonName',label:'Фан'},
+{name:'teacher',input:'lessonTeacher',label:'Омӯзгор'},
+{name:'group',input:'lessonGroup',label:'Гурӯҳ'}
+];
+
+const gradeFields = [
+{name:'student',input:'gradeStudent',label:'Донишҷӯ'},
+{name:'subject',input:'gradeSubject',label:'Фан'},
+{name:'grade',input:'gradeValue',label:'Баҳо'}
+];
+
+const teacherFields = [
+{name:'name',input:'teacherName',label:'Ном'},
+{name:'subject',input:'teacherSubject',label:'Фан'}
+];
+
+setup('studentForm','students',studentFields,'studentList');
+setup('lessonForm','lessons',lessonFields,'lessonList');
+setup('gradeForm','grades',gradeFields,'gradeList');
+setup('teacherForm','teachers',teacherFields,'teacherList');
+
+render('students','studentList',studentFields);
+render('lessons','lessonList',lessonFields);
+render('grades','gradeList',gradeFields);
+render('teachers','teacherList',teacherFields);
+</script>
+</body>
+  </html>
