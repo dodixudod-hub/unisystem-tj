@@ -1,253 +1,190 @@
-here<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="tg">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>UniSystem TJ</title>
-
-<style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f1f5f9;color:#172554}
-header{background:#123c75;color:white;text-align:center;padding:25px 12px}
-header h1{margin:0 0 10px}
-nav{background:#0b2850;padding:12px;display:flex;justify-content:center;flex-wrap:wrap;gap:8px}
-nav button{background:transparent;color:white;border:0;padding:10px;cursor:pointer;font-size:15px}
-.container{max-width:950px;margin:25px auto;padding:15px}
-.welcome,.panel{background:white;padding:22px;border-radius:14px;margin-bottom:20px;box-shadow:0 3px 12px #0001}
-.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-.card{background:white;border:2px solid transparent;border-radius:14px;padding:22px 10px;text-align:center;cursor:pointer;box-shadow:0 3px 12px #0001}
-.card:active{border-color:#2563eb}
-.symbol{font-size:34px;margin-bottom:10px}
-.card h3{margin:5px 0}
-.panel{display:none}
-.panel h2{color:#123c75}
-input,select{width:100%;padding:12px;margin:7px 0;border:1px solid #cbd5e1;border-radius:8px;font-size:16px}
-.action{background:#123c75;color:white;border:0;border-radius:8px;padding:12px 16px;margin:7px 3px 7px 0;cursor:pointer}
-.delete{background:#dc2626;color:white;border:0;border-radius:6px;padding:8px;margin-top:8px}
-.item{background:#f1f5f9;border-radius:8px;padding:12px;margin:10px 0;overflow-wrap:anywhere}
-.back{background:#64748b}
-footer{text-align:center;padding:25px;color:#64748b;font-size:13px}
-.notice{background:#dbeafe;padding:15px;border-radius:10px;margin-top:20px}
-@media(min-width:600px){.cards{grid-template-columns:repeat(4,minmax(0,1fr))}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniSystem TJ - Низоми Идоракунии Донишгоҳ</title>
+    <!-- Tailwind CSS CDN барои тарҳи зебо ва мобилӣ -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome барои иконкаҳо -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
+<body class="bg-slate-900 text-slate-100 font-sans min-h-screen flex flex-col">
 
-<body>
-<header>
-<h1>🎓 UniSystem TJ</h1>
-<p>Донишгоҳи инноватсионии шаҳри Кӯлоб</p>
-</header>
+    <!-- Сарлавҳа (Header) -->
+    <header class="bg-slate-800 border-b border-slate-700 p-4 sticky top-0 z-50 shadow-md">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold text-indigo-400 flex items-center gap-2">
+                <i class="fa-solid fa-graduation-cap"></i> UniSystem TJ
+            </h1>
+            <div id="connection-status" class="text-xs bg-amber-500/20 text-amber-300 px-2 py-1 rounded-full border border-amber-500/30">
+                Павастшавӣ...
+            </div>
+        </div>
+    </header>
 
-<nav>
-<button onclick="goHome()">Асосӣ</button>
-<button onclick="openPanel('students')">Донишҷӯён</button>
-<button onclick="openPanel('lessons')">Дарсҳо</button>
-<button onclick="openPanel('grades')">Баҳоҳо</button>
-<button onclick="openPanel('teachers')">Омӯзгорон</button>
-</nav>
+    <!-- Менюи асосӣ (Navigation Tabs) -->
+    <nav class="bg-slate-800/80 backdrop-blur border-b border-slate-700 px-2 py-2 overflow-x-auto">
+        <div class="max-w-7xl mx-auto flex gap-2 min-w-max">
+            <button onclick="switchTab('home')" class="tab-btn px-4 py-2 rounded-xl text-sm font-medium transition bg-indigo-600 text-white shadow-lg shadow-indigo-600/30" data-target="home">
+                <i class="fa-solid fa-house mr-1"></i> Асосӣ
+            </button>
+            <button onclick="switchTab('students')" class="tab-btn px-4 py-2 rounded-xl text-sm font-medium transition text-slate-300 hover:bg-slate-700" data-target="students">
+                <i class="fa-solid fa-user-graduate mr-1"></i> Донишҷӯён
+            </button>
+            <button onclick="switchTab('lessons')" class="tab-btn px-4 py-2 rounded-xl text-sm font-medium transition text-slate-300 hover:bg-slate-700" data-target="lessons">
+                <i class="fa-solid fa-book mr-1"></i> Дарсҳо
+            </button>
+            <button onclick="switchTab('grades')" class="tab-btn px-4 py-2 rounded-xl text-sm font-medium transition text-slate-300 hover:bg-slate-700" data-target="grades">
+                <i class="fa-solid fa-star mr-1"></i> Баҳоҳо
+            </button>
+            <button onclick="switchTab('teachers')" class="tab-btn px-4 py-2 rounded-xl text-sm font-medium transition text-slate-300 hover:bg-slate-700" data-target="teachers">
+                <i class="fa-solid fa-chalkboard-user mr-1"></i> Омӯзгорон
+            </button>
+        </div>
+    </nav>
 
-<main class="container">
-<section id="home">
-<div class="welcome">
-<h2>Хуш омадед!</h2>
-<p>Системаи рақамии идоракунии донишгоҳ</p>
-<p>Қисми лозимаро интихоб кунед.</p>
-</div>
+    <!-- Қисми асосии мундариҷа (Main Content) -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 pb-20">
 
-<div class="cards">
-<div class="card" onclick="openPanel('students')">
-<div class="symbol">👨‍🎓</div><h3>Донишҷӯён</h3><p>Рӯйхат ва гурӯҳҳо</p>
-</div>
-<div class="card" onclick="openPanel('lessons')">
-<div class="symbol">📚</div><h3>Дарсҳо</h3><p>Фанҳои таълимӣ</p>
-</div>
-<div class="card" onclick="openPanel('grades')">
-<div class="symbol">📊</div><h3>Баҳоҳо</h3><p>Натиҷаҳои таҳсил</p>
-</div>
-<div class="card" onclick="openPanel('teachers')">
-<div class="symbol">👨‍🏫</div><h3>Омӯзгорон</h3><p>Рӯйхати омӯзгорон</p>
-</div>
-</div>
+        <!-- 1. Саҳифаи Асосӣ -->
+        <section id="home" class="tab-content space-y-4">
+            <div class="bg-gradient-to-r from-indigo-900/60 to-purple-900/60 border border-indigo-500/30 p-6 rounded-2xl shadow-xl">
+                <h2 class="text-2xl font-bold mb-2">Хуш омадед ба UniSystem TJ!</h2>
+                <p class="text-slate-300 text-sm">Ин система барои идоракунии донишгоҳҳо ва марказҳои омӯзишӣ пешбинӣ шудааст. Шумо метавонед аз менюи боло қисмҳои гуногунро идора кунед.</p>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="bg-slate-800/60 border border-slate-700 p-4 rounded-xl text-center">
+                    <i class="fa-solid fa-user-group text-indigo-400 text-2xl mb-2"></i>
+                    <h3 class="text-xs text-slate-400">Донишҷӯён</h3>
+                    <p id="stat-students" class="text-xl font-bold">0</p>
+                </div>
+                <div class="bg-slate-800/60 border border-slate-700 p-4 rounded-xl text-center">
+                    <i class="fa-solid fa-chalkboard-user text-emerald-400 text-2xl mb-2"></i>
+                    <h3 class="text-xs text-slate-400">Омӯзгорон</h3>
+                    <p id="stat-teachers" class="text-xl font-bold">0</p>
+                </div>
+            </div>
+        </section>
 
-<div class="notice">📢 Версияи ибтидоии UniSystem TJ</div>
-</section>
+        <!-- 2. Саҳифаи Донишҷӯён -->
+        <section id="students" class="tab-content hidden space-y-4">
+            <div class="flex justify-between items-center">
+                <h2 class="text-xl font-bold">Рӯйхати Донишҷӯён</h2>
+                <button onclick="openModal('student-modal')" class="bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1.5 rounded-lg text-sm shadow">
+                    <i class="fa-solid fa-plus mr-1"></i> Илова кардан
+                </button>
+            </div>
+            <div id="students-list" class="space-y-2">
+                <!-- Маълумот ба таври динамикӣ бор карда мешавад -->
+                <p class="text-slate-400 text-sm text-center py-4">Боргузорӣ...</p>
+            </div>
+        </section>
 
-<section id="students" class="panel">
-<h2>👨‍🎓 Донишҷӯён</h2>
-<form id="studentForm">
-<input id="studentName" placeholder="Ному насаби донишҷӯ" required>
-<input id="studentGroup" placeholder="Гурӯҳи донишҷӯ" required>
-<button class="action">+ Илова кардани донишҷӯ</button>
-</form>
-<div id="studentList"></div>
-<button class="action back" onclick="goHome()">Бозгашт</button>
-</section>
+        <!-- 3. Саҳифаи Дарсҳо -->
+        <section id="lessons" class="tab-content hidden space-y-4">
+            <div class="flex justify-between items-center">
+                <h2 class="text-xl font-bold">Рӯйхати Дарсҳо</h2>
+                <button onclick="openModal('lesson-modal')" class="bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1.5 rounded-lg text-sm shadow">
+                    <i class="fa-solid fa-plus mr-1"></i> Илова кардан
+                </button>
+            </div>
+            <div id="lessons-list" class="space-y-2">
+                <p class="text-slate-400 text-sm text-center py-4">Боргузорӣ...</p>
+            </div>
+        </section>
 
-<section id="lessons" class="panel">
-<h2>📚 Дарсҳо</h2>
-<form id="lessonForm">
-<input id="lessonName" placeholder="Номи фан" required>
-<input id="lessonTeacher" placeholder="Номи омӯзгор" required>
-<input id="lessonGroup" placeholder="Гурӯҳ" required>
-<button class="action">+ Илова кардани фан</button>
-</form>
-<div id="lessonList"></div>
-<button class="action back" onclick="goHome()">Бозгашт</button>
-</section>
+        <!-- 4. Саҳифаи Баҳоҳо -->
+        <section id="grades" class="tab-content hidden space-y-4">
+            <div class="flex justify-between items-center">
+                <h2 class="text-xl font-bold">Баҳоҳои Донишҷӯён</h2>
+                <button onclick="openModal('grade-modal')" class="bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1.5 rounded-lg text-sm shadow">
+                    <i class="fa-solid fa-plus mr-1"></i> Илова кардан
+                </button>
+            </div>
+            <div id="grades-list" class="space-y-2">
+                <p class="text-slate-400 text-sm text-center py-4">Боргузорӣ...</p>
+            </div>
+        </section>
 
-<section id="grades" class="panel">
-<h2>📊 Баҳоҳо</h2>
-<form id="gradeForm">
-<input id="gradeStudent" placeholder="Номи донишҷӯ" required>
-<input id="gradeSubject" placeholder="Номи фан" required>
-<input id="gradeValue" type="number" min="0" max="100" placeholder="Баҳо (0–100)" required>
-<button class="action">+ Илова кардани баҳо</button>
-</form>
-<div id="gradeList"></div>
-<button class="action back" onclick="goHome()">Бозгашт</button>
-</section>
+        <!-- 5. Саҳифаи Омӯзгорон -->
+        <section id="teachers" class="tab-content hidden space-y-4">
+            <div class="flex justify-between items-center">
+                <h2 class="text-xl font-bold">Рӯйхати Омӯзгорон</h2>
+                <button onclick="openModal('teacher-modal')" class="bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1.5 rounded-lg text-sm shadow">
+                    <i class="fa-solid fa-plus mr-1"></i> Илова кардан
+                </button>
+            </div>
+            <div id="teachers-list" class="space-y-2">
+                <p class="text-slate-400 text-sm text-center py-4">Боргузорӣ...</p>
+            </div>
+        </section>
 
-<section id="teachers" class="panel">
-<h2>👨‍🏫 Омӯзгорон</h2>
-<form id="teacherForm">
-<input id="teacherName" placeholder="Ному насаби омӯзгор" required>
-<input id="teacherSubject" placeholder="Фани таълимӣ" required>
-<button class="action">+ Илова кардани омӯзгор</button>
-</form>
-<div id="teacherList"></div>
-<button class="action back" onclick="goHome()">Бозгашт</button>
-</section>
-</main>
+    </main>
 
-<footer>UniSystem TJ © 2026</footer>
+    <!-- Модалҳо барои илова кардани маълумот -->
+    <!-- Модали Донишҷӯ -->
+    <div id="student-modal" class="fixed inset-0 bg-black/70 hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-slate-800 border border-slate-700 w-full max-w-md p-5 rounded-2xl space-y-4 shadow-2xl">
+            <h3 class="text-lg font-bold">Илова кардани донишҷӯ</h3>
+            <input type="text" id="student-name" placeholder="Ному насаб" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500">
+            <input type="text" id="student-group" placeholder="Гурӯҳ (масалан: IT-21)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500">
+            <div class="flex justify-end gap-2">
+                <button onclick="closeModal('student-modal')" class="px-4 py-2 rounded-xl text-sm bg-slate-700 hover:bg-slate-600">Бекор кардан</button>
+                <button onclick="addStudent()" class="px-4 py-2 rounded-xl text-sm bg-indigo-600 hover:bg-indigo-500 text-white">Сабт кардан</button>
+            </div>
+        </div>
+    </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-const SUPABASE_URL = "https://tvokddgcrbmmvxzubnlp.supabase.co";
-const SUPABASE_KEY = "sb_publishable_L9Mk_uOqwfv5qPXo_L2NHA_FxCuv7qr";
+    <!-- Модали Дарс -->
+    <div id="lesson-modal" class="fixed inset-0 bg-black/70 hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-slate-800 border border-slate-700 w-full max-w-md p-5 rounded-2xl space-y-4 shadow-2xl">
+            <h3 class="text-lg font-bold">Илова кардани дарс</h3>
+            <input type="text" id="lesson-title" placeholder="Номи фан" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500">
+            <input type="text" id="lesson-room" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500" placeholder="Хона / Аудитория">
+            <div class="flex justify-end gap-2">
+                <button onclick="closeModal('lesson-modal')" class="px-4 py-2 rounded-xl text-sm bg-slate-700 hover:bg-slate-600">Бекор кардан</button>
+                <button onclick="addLesson()" class="px-4 py-2 rounded-xl text-sm bg-indigo-600 hover:bg-indigo-500 text-white">Сабт кардан</button>
+            </div>
+        </div>
+    </div>
 
-let supabase = null;
+    <!-- Модали Баҳо -->
+    <div id="grade-modal" class="fixed inset-0 bg-black/70 hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-slate-800 border border-slate-700 w-full max-w-md p-5 rounded-2xl space-y-4 shadow-2xl">
+            <h3 class="text-lg font-bold">Илова кардани баҳо</h3>
+            <input type="text" id="grade-student" placeholder="Номи донишҷӯ" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500">
+            <input type="text" id="grade-subject" placeholder="Фан" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500">
+            <input type="number" id="grade-value" placeholder="Баҳо (масалан: 5)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500">
+            <div class="flex justify-end gap-2">
+                <button onclick="closeModal('grade-modal')" class="px-4 py-2 rounded-xl text-sm bg-slate-700 hover:bg-slate-600">Бекор кардан</button>
+                <button onclick="addGrade()" class="px-4 py-2 rounded-xl text-sm bg-indigo-600 hover:bg-indigo-500 text-white">Сабт кардан</button>
+            </div>
+        </div>
+    </div>
 
-try {
-  if (window.supabase) {
-    supabase = window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_KEY
-    );
-  } else {
-    console.error("Supabase library loaded нашуд");
-  }
-} catch (error) {
-  console.error("Supabase error:", error);
-}
+    <!-- Модали Омӯзгор -->
+    <div id="teacher-modal" class="fixed inset-0 bg-black/70 hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-slate-800 border border-slate-700 w-full max-w-md p-5 rounded-2xl space-y-4 shadow-2xl">
+            <h3 class="text-lg font-bold">Илова кардани омӯзгор</h3>
+            <input type="text" id="teacher-name" placeholder="Ному насаб" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500">
+            <input type="text" id="teacher-subject" placeholder="Фанни таълимӣ" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500">
+            <div class="flex justify-end gap-2">
+                <button onclick="closeModal('teacher-modal')" class="px-4 py-2 rounded-xl text-sm bg-slate-700 hover:bg-slate-600">Бекор кардан</button>
+                <button onclick="addTeacher()" class="px-4 py-2 rounded-xl text-sm bg-indigo-600 hover:bg-indigo-500 text-white">Сабт кардан</button>
+            </div>
+        </div>
+    </div>
 
-const keys = {
-students: 'unisystem_students',
-lessons: 'unisystem_lessons',
-grades: 'unisystem_grades',
-teachers: 'unisystem_teachers'
-};
+    <!-- Замимаи JavaScript -->
+    <script>
+        // Таъиноти Supabase (Лутфан калидҳои худро дар ин ҷо ворид кунед)
+        const SUPABASE_URL = 'YOUR_SUPABASE_URL'; 
+        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+        
+        let supabaseClient = null;
 
-function load(key) {
-try { return JSON.parse(localStorage.getItem(keys[key]) || '[]'); }
-catch(e) { return []; }
-}
-
-function save(key, data) {
-localStorage.setItem(keys[key], JSON.stringify(data));
-}
-
-function openPanel(id) {
-document.getElementById('home').style.display = 'none';
-document.querySelectorAll('.panel').forEach(p => p.style.display = 'none');
-document.getElementById(id).style.display = 'block';
-window.scrollTo(0, 0);
-}
-
-function goHome() {
-document.querySelectorAll('.panel').forEach(p => p.style.display = 'none');
-document.getElementById('home').style.display = 'block';
-window.scrollTo(0, 0);
-}
-
-function render(key, elementId, fields) {
-const container = document.getElementById(elementId);
-container.innerHTML = '';
-const data = load(key);
-
-data.forEach((record, index) => {
-const item = document.createElement('div');
-item.className = 'item';
-
-const text = document.createElement('div');
-text.textContent = (index + 1) + '. ' +
-fields.map(field => field.label + ': ' + record[field.name]).join(' | ');
-
-const del = document.createElement('button');
-del.className = 'delete';
-del.textContent = 'Нест кардан';
-del.onclick = () => {
-const updated = load(key);
-updated.splice(index, 1);
-save(key, updated);
-render(key, elementId, fields);
-};
-
-item.append(text, del);
-container.append(item);
-});
-}
-
-function setup(formId, key, fields, listId) {
-const form = document.getElementById(formId);
-
-form.addEventListener('submit', event => {
-event.preventDefault();
-
-const record = {};
-for (const field of fields) {
-record[field.name] = document.getElementById(field.input).value.trim();
-}
-
-const data = load(key);
-data.push(record);
-save(key, data);
-form.reset();
-render(key, listId, fields);
-});
-}
-
-const studentFields = [
-{name:'name',input:'studentName',label:'Ном'},
-{name:'group',input:'studentGroup',label:'Гурӯҳ'}
-];
-
-const lessonFields = [
-{name:'name',input:'lessonName',label:'Фан'},
-{name:'teacher',input:'lessonTeacher',label:'Омӯзгор'},
-{name:'group',input:'lessonGroup',label:'Гурӯҳ'}
-];
-
-const gradeFields = [
-{name:'student',input:'gradeStudent',label:'Донишҷӯ'},
-{name:'subject',input:'gradeSubject',label:'Фан'},
-{name:'grade',input:'gradeValue',label:'Баҳо'}
-];
-
-const teacherFields = [
-{name:'name',input:'teacherName',label:'Ном'},
-{name:'subject',input:'teacherSubject',label:'Фан'}
-];
-
-setup('studentForm','students',studentFields,'studentList');
-setup('lessonForm','lessons',lessonFields,'lessonList');
-setup('gradeForm','grades',gradeFields,'gradeList');
-setup('teacherForm','teachers',teacherFields,'teacherList');
-
-render('students','studentList',studentFields);
-render('lessons','lessonList',lessonFields);
-render('grades','gradeList',gradeFields);
-render('teachers','teacherList',teacherFields);
-</script>
-</body>
-</html>
+        try {
+            if (SUPABASE_URL !== 'YOUR_SUPABASE_
