@@ -1,303 +1,501 @@
+
 <!DOCTYPE html>
 <html lang="tg">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>UniSystem TJ - Низоми идоракунии донишгоҳ</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta name="theme-color" content="#102c57">
+  <title>UniSystem TJ | Системаи донишгоҳӣ</title>
+
   <style>
-    [hidden] { display: none !important; }
-    body { -webkit-tap-highlight-color: transparent; }
+    :root {
+      --primary: #123b72;
+      --secondary: #1769d2;
+      --background: #f1f5f9;
+      --white: #ffffff;
+      --text: #172033;
+      --muted: #64748b;
+      --border: #e2e8f0;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      color: var(--text);
+      background: var(--background);
+    }
+
+    header {
+      padding: 22px 16px;
+      background: linear-gradient(135deg, #102c57, #1769d2);
+      color: white;
+    }
+
+    .header-inner {
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    .brand {
+      font-size: 26px;
+      font-weight: bold;
+    }
+
+    header p {
+      margin-bottom: 0;
+      line-height: 1.6;
+    }
+
+    nav {
+      display: flex;
+      gap: 8px;
+      padding: 12px 16px;
+      background: white;
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+    }
+
+    nav button {
+      width: auto;
+      flex-shrink: 0;
+      background: #eaf1fb;
+      color: var(--primary);
+    }
+
+    button {
+      border: 0;
+      padding: 12px 16px;
+      border-radius: 9px;
+      background: var(--secondary);
+      color: white;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: wait;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 24px auto;
+      padding: 0 16px;
+    }
+
+    .welcome {
+      padding: 24px;
+      color: white;
+      background: var(--primary);
+      border-radius: 16px;
+      line-height: 1.7;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+      gap: 14px;
+      margin: 20px 0;
+    }
+
+    .card {
+      padding: 20px;
+      border-radius: 14px;
+      background: var(--white);
+      box-shadow: 0 3px 12px #00000008;
+      overflow-wrap: anywhere;
+    }
+
+    .number {
+      margin-top: 10px;
+      font-size: 28px;
+      font-weight: bold;
+      color: var(--secondary);
+    }
+
+    .section {
+      margin-top: 20px;
+      padding: 20px;
+      background: white;
+      border-radius: 14px;
+    }
+
+    .section h2 {
+      margin-top: 0;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .status {
+      padding: 12px;
+      border-radius: 9px;
+      background: #eff6ff;
+      color: var(--primary);
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+    }
+
+    .muted {
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+    }
+
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    th {
+      background: #f8fafc;
+    }
+
+    footer {
+      padding: 24px 16px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    @media (max-width: 500px) {
+      .brand {
+        font-size: 23px;
+      }
+
+      .welcome {
+        padding: 18px;
+      }
+
+      .section, .card {
+        padding: 16px;
+      }
+    }
   </style>
 </head>
-<body class="bg-slate-900 text-slate-100 font-sans min-h-screen flex flex-col">
-  <header class="bg-slate-800 border-b border-slate-700 p-4 sticky top-0 z-40 shadow-md">
-    <div class="max-w-7xl mx-auto flex justify-between items-center gap-3">
-      <h1 class="text-xl font-bold text-indigo-400 flex items-center gap-2">
-        <i class="fa-solid fa-graduation-cap"></i> UniSystem TJ
-      </h1>
-      <span id="connection-status" class="text-xs bg-amber-500/20 text-amber-300 px-2 py-1 rounded-full border border-amber-500/30">Нигоҳдорӣ дар ин телефон</span>
+
+<body>
+  <header>
+    <div class="header-inner">
+      <div class="brand">🎓 UniSystem TJ</div>
+      <p>Системаи электронии идоракунии донишгоҳ</p>
+      <p>Донишгоҳи инноватсионии шаҳри Кӯлоб</p>
     </div>
   </header>
 
-  <nav class="bg-slate-800/90 border-b border-slate-700 px-2 py-2 overflow-x-auto">
-    <div class="max-w-7xl mx-auto flex gap-2 min-w-max">
-      <button type="button" class="tab-btn px-4 py-2 rounded-xl text-sm font-medium bg-indigo-600 text-white" data-target="home"><i class="fa-solid fa-house mr-1"></i> Асосӣ</button>
-      <button type="button" class="tab-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-700" data-target="students"><i class="fa-solid fa-user-graduate mr-1"></i> Донишҷӯён</button>
-      <button type="button" class="tab-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-700" data-target="lessons"><i class="fa-solid fa-book mr-1"></i> Дарсҳо</button>
-      <button type="button" class="tab-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-700" data-target="grades"><i class="fa-solid fa-star mr-1"></i> Баҳоҳо</button>
-      <button type="button" class="tab-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-700" data-target="teachers"><i class="fa-solid fa-chalkboard-user mr-1"></i> Омӯзгорон</button>
-    </div>
+  <nav aria-label="Менюи асосӣ">
+    <button data-page="home">Асосӣ</button>
+    <button data-page="student">Донишҷӯён</button>
+    <button data-page="teacher">Омӯзгорон</button>
+    <button data-page="courses">Фанҳо</button>
+    <button data-page="grades">Баҳоҳо</button>
   </nav>
 
-  <main class="flex-1 max-w-7xl w-full mx-auto p-4 pb-20">
-    <section id="home" class="tab-content space-y-4">
-      <div class="bg-gradient-to-r from-indigo-900/60 to-purple-900/60 border border-indigo-500/30 p-6 rounded-2xl shadow-xl">
-        <h2 class="text-2xl font-bold mb-2">Хуш омадед ба UniSystem TJ!</h2>
-        <p class="text-slate-300 text-sm">Системаи рақамии идоракунии донишгоҳи инноватсионии шаҳри Кӯлоб. Қисми лозимаро интихоб кунед.</p>
+  <main class="container">
+    <section id="home" class="page">
+      <div class="welcome">
+        <h1>Хуш омадед!</h1>
+        <p>
+          UniSystem TJ — платформаи рақамӣ барои
+          идоракунии маълумоти донишҷӯён, омӯзгорон,
+          фанҳои таълимӣ ва баҳоҳо.
+        </p>
       </div>
-      <div class="grid grid-cols-2 gap-4">
-        <button type="button" data-open="students" class="bg-slate-800/60 border border-slate-700 p-4 rounded-xl text-center hover:border-indigo-500">
-          <i class="fa-solid fa-user-group text-indigo-400 text-2xl mb-2"></i>
-          <h3 class="text-xs text-slate-400">Донишҷӯён</h3><p id="stat-students" class="text-xl font-bold">0</p>
-        </button>
-        <button type="button" data-open="teachers" class="bg-slate-800/60 border border-slate-700 p-4 rounded-xl text-center hover:border-emerald-500">
-          <i class="fa-solid fa-chalkboard-user text-emerald-400 text-2xl mb-2"></i>
-          <h3 class="text-xs text-slate-400">Омӯзгорон</h3><p id="stat-teachers" class="text-xl font-bold">0</p>
-        </button>
+
+      <div class="grid">
+        <div class="card">
+          <div>👨‍🎓 Донишҷӯён</div>
+          <div class="number" id="studentCount">—</div>
+        </div>
+        <div class="card">
+          <div>👨‍🏫 Омӯзгорон</div>
+          <div class="number" id="teacherCount">—</div>
+        </div>
+        <div class="card">
+          <div>📚 Фанҳо</div>
+          <div class="number" id="courseCount">—</div>
+        </div>
+        <div class="card">
+          <div>📝 Баҳоҳо</div>
+          <div class="number" id="gradeCount">—</div>
+        </div>
       </div>
-      <p class="text-xs text-amber-300 bg-amber-500/10 border border-amber-500/20 rounded-xl p-3">Эзоҳ: ин версия маълумотро дар браузери ҳамин телефон нигоҳ медорад. Ҳоло ба Supabase пайваст нест.</p>
+
+      <div class="section">
+        <h2>Ҳолати базаи маълумот</h2>
+        <p id="connectionStatus" class="status">
+          Барои санҷиш тугмаро пахш кунед.
+        </p>
+        <button id="checkConnection">Санҷидани пайвастшавӣ</button>
+      </div>
     </section>
 
-    <section id="students" class="tab-content hidden space-y-4">
-      <div class="flex justify-between items-center gap-3"><h2 class="text-xl font-bold">Рӯйхати донишҷӯён</h2><button type="button" data-modal="student-modal" class="bg-indigo-600 hover:bg-indigo-500 px-3 py-2 rounded-lg text-sm"><i class="fa-solid fa-plus mr-1"></i> Илова</button></div>
-      <div id="students-list" class="space-y-2"></div>
+    <section id="student" class="page hidden">
+      <div class="section">
+        <h2>👨‍🎓 Донишҷӯён</h2>
+        <p class="muted">Маълумоти донишҷӯён аз база гирифта мешавад.</p>
+        <div id="studentResult" class="status">Ҳанӯз маълумот бор нашудааст.</div>
+        <button data-load="student">Бор кардани донишҷӯён</button>
+      </div>
     </section>
 
-    <section id="lessons" class="tab-content hidden space-y-4">
-      <div class="flex justify-between items-center gap-3"><h2 class="text-xl font-bold">Рӯйхати дарсҳо</h2><button type="button" data-modal="lesson-modal" class="bg-indigo-600 hover:bg-indigo-500 px-3 py-2 rounded-lg text-sm"><i class="fa-solid fa-plus mr-1"></i> Илова</button></div>
-      <div id="lessons-list" class="space-y-2"></div>
+    <section id="teacher" class="page hidden">
+      <div class="section">
+        <h2>👨‍🏫 Омӯзгорон</h2>
+        <p class="muted">Маълумоти омӯзгорон аз база гирифта мешавад.</p>
+        <div id="teacherResult" class="status">Ҳанӯз маълумот бор нашудааст.</div>
+        <button data-load="teacher">Бор кардани омӯзгорон</button>
+      </div>
     </section>
 
-    <section id="grades" class="tab-content hidden space-y-4">
-      <div class="flex justify-between items-center gap-3"><h2 class="text-xl font-bold">Баҳоҳои донишҷӯён</h2><button type="button" data-modal="grade-modal" class="bg-indigo-600 hover:bg-indigo-500 px-3 py-2 rounded-lg text-sm"><i class="fa-solid fa-plus mr-1"></i> Илова</button></div>
-      <div id="grades-list" class="space-y-2"></div>
+    <section id="courses" class="page hidden">
+      <div class="section">
+        <h2>📚 Фанҳои таълимӣ</h2>
+        <p class="muted">Рӯйхати фанҳо ва синфхонаҳо.</p>
+        <div id="coursesResult" class="status">Ҳанӯз маълумот бор нашудааст.</div>
+        <button data-load="courses">Бор кардани фанҳо</button>
+      </div>
     </section>
 
-    <section id="teachers" class="tab-content hidden space-y-4">
-      <div class="flex justify-between items-center gap-3"><h2 class="text-xl font-bold">Рӯйхати омӯзгорон</h2><button type="button" data-modal="teacher-modal" class="bg-indigo-600 hover:bg-indigo-500 px-3 py-2 rounded-lg text-sm"><i class="fa-solid fa-plus mr-1"></i> Илова</button></div>
-      <div id="teachers-list" class="space-y-2"></div>
+    <section id="grades" class="page hidden">
+      <div class="section">
+        <h2>📝 Баҳоҳо</h2>
+        <p class="muted">Маълумоти баҳоҳо аз база гирифта мешавад.</p>
+        <div id="gradesResult" class="status">Ҳанӯз маълумот бор нашудааст.</div>
+        <button data-load="grades">Бор кардани баҳоҳо</button>
+      </div>
     </section>
   </main>
 
-  <footer class="text-center text-slate-500 text-xs p-5">UniSystem TJ © 2026</footer>
+  <footer>
+    UniSystem TJ © 2026 — Системаи донишгоҳӣ
+  </footer>
 
-  <div id="student-modal" class="modal fixed inset-0 bg-black/70 hidden items-center justify-center p-4 z-50">
-    <div class="bg-slate-800 border border-slate-700 w-full max-w-md p-5 rounded-2xl space-y-4">
-      <h3 class="text-lg font-bold">Илова кардани донишҷӯ</h3>
-      <input id="student-name" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm" placeholder="Ному насаб">
-      <input id="student-group" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm" placeholder="Гурӯҳ, масалан IT-21">
-      <div class="flex justify-end gap-2"><button type="button" data-close="student-modal" class="px-4 py-2 rounded-xl text-sm bg-slate-700">Бекор кардан</button><button type="button" id="save-student" class="px-4 py-2 rounded-xl text-sm bg-indigo-600">Сабт кардан</button></div>
-    </div>
-  </div>
-
-  <div id="lesson-modal" class="modal fixed inset-0 bg-black/70 hidden items-center justify-center p-4 z-50">
-    <div class="bg-slate-800 border border-slate-700 w-full max-w-md p-5 rounded-2xl space-y-4">
-      <h3 class="text-lg font-bold">Илова кардани дарс</h3>
-      <input id="lesson-title" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm" placeholder="Номи фан">
-      <input id="lesson-room" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm" placeholder="Хона / аудитория">
-      <div class="flex justify-end gap-2"><button type="button" data-close="lesson-modal" class="px-4 py-2 rounded-xl text-sm bg-slate-700">Бекор кардан</button><button type="button" id="save-lesson" class="px-4 py-2 rounded-xl text-sm bg-indigo-600">Сабт кардан</button></div>
-    </div>
-  </div>
-
-  <div id="grade-modal" class="modal fixed inset-0 bg-black/70 hidden items-center justify-center p-4 z-50">
-    <div class="bg-slate-800 border border-slate-700 w-full max-w-md p-5 rounded-2xl space-y-4">
-      <h3 class="text-lg font-bold">Илова кардани баҳо</h3>
-      <input id="grade-student" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm" placeholder="Номи донишҷӯ">
-      <input id="grade-subject" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm" placeholder="Фан">
-      <input id="grade-value" type="number" min="0" max="100" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm" placeholder="Баҳо (0–100)">
-      <div class="flex justify-end gap-2"><button type="button" data-close="grade-modal" class="px-4 py-2 rounded-xl text-sm bg-slate-700">Бекор кардан</button><button type="button" id="save-grade" class="px-4 py-2 rounded-xl text-sm bg-indigo-600">Сабт кардан</button></div>
-    </div>
-  </div>
-
-  <div id="teacher-modal" class="modal fixed inset-0 bg-black/70 hidden items-center justify-center p-4 z-50">
-    <div class="bg-slate-800 border border-slate-700 w-full max-w-md p-5 rounded-2xl space-y-4">
-      <h3 class="text-lg font-bold">Илова кардани омӯзгор</h3>
-      <input id="teacher-name" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm" placeholder="Ному насаб">
-      <input id="teacher-subject" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm" placeholder="Фанни таълимӣ">
-      <div class="flex justify-end gap-2"><button type="button" data-close="teacher-modal" class="px-4 py-2 rounded-xl text-sm bg-slate-700">Бекор кардан</button><button type="button" id="save-teacher" class="px-4 py-2 rounded-xl text-sm bg-indigo-600">Сабт кардан</button></div>
-    </div>
-  </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <script>
-    'use strict';
+    // Қиматҳои воқеии лоиҳаи Supabase-и худро гузоред.
+    const SUPABASE_URL = "https://tvokddgcrbmmvxzubnlp.supabase.co/rest/v1/";
+    const SUPABASE_KEY = "sb_publishable_L9Mk_uOqwfv5qPXo_L2NHA_FxCuv7qr";
 
-    const storageKeys = {
-      students: 'unisystem_tj_students',
-      lessons: 'unisystem_tj_lessons',
-      grades: 'unisystem_tj_grades',
-      teachers: 'unisystem_tj_teachers'
+    let db = null;
+
+    const isConfigured =
+      SUPABASE_URL.startsWith("https://") &&
+      SUPABASE_URL.endsWith(".supabase.co") &&
+      !SUPABASE_KEY.includes("_И_ТУ");
+
+    if (isConfigured && window.supabase) {
+      db = window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+      );
+    }
+
+    const tables = {
+      student: {
+        table: "Student",
+        result: "studentResult",
+        count: "studentCount",
+        columns: ["id", "name"]
+      },
+      teacher: {
+        table: "Teacher",
+        result: "teacherResult",
+        count: "teacherCount",
+        columns: ["id", "name"]
+      },
+      courses: {
+        table: "Courses",
+        result: "coursesResult",
+        count: "courseCount",
+        columns: ["id", "title", "room"]
+      },
+      grades: {
+        table: "Grades",
+        result: "gradesResult",
+        count: "gradeCount",
+        columns: ["id", "student", "subject", "grade"]
+      }
     };
 
-    function getRecords(type) {
-      try {
-        const parsed = JSON.parse(localStorage.getItem(storageKeys[type]) || '[]');
-        return Array.isArray(parsed) ? parsed : [];
-      } catch (error) {
-        return [];
-      }
+    function setStatus(message) {
+      document.getElementById("connectionStatus").textContent = message;
     }
 
-    function putRecords(type, records) {
-      try {
-        localStorage.setItem(storageKeys[type], JSON.stringify(records));
-        return true;
-      } catch (error) {
-        alert('Маълумот нигоҳ дошта нашуд. Хотираи браузерро санҷед.');
-        return false;
-      }
-    }
-
-    function switchTab(id) {
-      document.querySelectorAll('.tab-content').forEach(section => section.classList.add('hidden'));
-      const page = document.getElementById(id);
-      if (page) page.classList.remove('hidden');
-
-      document.querySelectorAll('.tab-btn').forEach(button => {
-        const active = button.dataset.target === id;
-        button.classList.toggle('bg-indigo-600', active);
-        button.classList.toggle('text-white', active);
-        button.classList.toggle('text-slate-300', !active);
+    function showPage(pageId) {
+      document.querySelectorAll(".page").forEach(function (page) {
+        page.classList.toggle("hidden", page.id !== pageId);
       });
-      window.scrollTo(0, 0);
     }
 
-    function openModal(id) {
-      const modal = document.getElementById(id);
-      if (!modal) return;
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
+    document.querySelectorAll("[data-page]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        showPage(button.dataset.page);
+      });
+    });
+
+    function addCell(row, value) {
+      const cell = document.createElement("td");
+      cell.textContent = value == null ? "" : String(value);
+      row.appendChild(cell);
     }
 
-    function closeModal(id) {
-      const modal = document.getElementById(id);
-      if (!modal) return;
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-    }
-
-    function field(id) {
-      return document.getElementById(id).value.trim();
-    }
-
-    function saveRecord(type, record, modalId, inputIds) {
-      if (Object.values(record).some(value => String(value).trim() === '')) {
-        alert('Лутфан ҳамаи майдонҳоро пур кунед.');
-        return;
-      }
-      const records = getRecords(type);
-      records.push({ id: Date.now().toString() + Math.random().toString(16).slice(2), ...record });
-      if (!putRecords(type, records)) return;
-      inputIds.forEach(id => { document.getElementById(id).value = ''; });
-      closeModal(modalId);
-      renderAll();
-    }
-
-    function addStudent() {
-      saveRecord('students', { name: field('student-name'), group: field('student-group') },
-        'student-modal', ['student-name', 'student-group']);
-    }
-
-    function addLesson() {
-      saveRecord('lessons', { title: field('lesson-title'), room: field('lesson-room') },
-        'lesson-modal', ['lesson-title', 'lesson-room']);
-    }
-
-    function addGrade() {
-      const raw = field('grade-value');
-      const grade = Number(raw);
-      if (raw === '' || !Number.isFinite(grade) || grade < 0 || grade > 100) {
-        alert('Баҳо бояд аз 0 то 100 бошад.');
-        return;
-      }
-      saveRecord('grades', { student: field('grade-student'), subject: field('grade-subject'), grade },
-        'grade-modal', ['grade-student', 'grade-subject', 'grade-value']);
-    }
-
-    function addTeacher() {
-      saveRecord('teachers', { name: field('teacher-name'), subject: field('teacher-subject') },
-        'teacher-modal', ['teacher-name', 'teacher-subject']);
-    }
-
-    function deleteRecord(type, id) {
-      if (!confirm('Ин сабтро нест мекунед?')) return;
-      putRecords(type, getRecords(type).filter(record => record.id !== id));
-      renderAll();
-    }
-
-    function renderList(type, elementId, fields) {
-      const container = document.getElementById(elementId);
+    function renderTable(container, rows, columns) {
       container.replaceChildren();
-      const records = getRecords(type);
 
-      if (records.length === 0) {
-        const empty = document.createElement('p');
-        empty.className = 'text-slate-400 text-sm text-center py-4';
-        empty.textContent = 'Ҳоло маълумот нест.';
-        container.appendChild(empty);
+      if (!rows || rows.length === 0) {
+        container.textContent = "Дар ин ҷадвал ҳоло маълумот нест.";
         return;
       }
 
-      records.forEach(record => {
-        const card = document.createElement('div');
-        card.className = 'bg-slate-800 border border-slate-700 rounded-xl p-4 flex justify-between items-start gap-3';
-        const details = document.createElement('div');
-        details.className = 'min-w-0 space-y-1';
+      const wrap = document.createElement("div");
+      wrap.className = "table-wrap";
 
-        fields.forEach(item => {
-          const line = document.createElement('p');
-          line.className = 'text-sm break-words';
-          line.textContent = item.label + ': ' + String(record[item.key] ?? '');
-          details.appendChild(line);
+      const table = document.createElement("table");
+      const thead = document.createElement("thead");
+      const headerRow = document.createElement("tr");
+
+      columns.forEach(function (column) {
+        addCell(headerRow, column);
+      });
+
+      thead.appendChild(headerRow);
+      table.appendChild(thead);
+
+      const tbody = document.createElement("tbody");
+
+      rows.forEach(function (item) {
+        const row = document.createElement("tr");
+
+        columns.forEach(function (column) {
+          addCell(row, item[column]);
         });
 
-        const del = document.createElement('button');
-        del.type = 'button';
-        del.className = 'bg-red-600 hover:bg-red-500 px-3 py-2 rounded-lg text-xs shrink-0';
-        del.textContent = 'Нест кардан';
-        del.addEventListener('click', () => deleteRecord(type, record.id));
-        card.append(details, del);
-        container.appendChild(card);
+        tbody.appendChild(row);
       });
+
+      table.appendChild(tbody);
+      wrap.appendChild(table);
+      container.appendChild(wrap);
     }
 
-    function renderAll() {
-      renderList('students', 'students-list', [
-        { key: 'name', label: 'Донишҷӯ' }, { key: 'group', label: 'Гурӯҳ' }
-      ]);
-      renderList('lessons', 'lessons-list', [
-        { key: 'title', label: 'Фан' }, { key: 'room', label: 'Аудитория' }
-      ]);
-      renderList('grades', 'grades-list', [
-        { key: 'student', label: 'Донишҷӯ' }, { key: 'subject', label: 'Фан' }, { key: 'grade', label: 'Баҳо' }
-      ]);
-      renderList('teachers', 'teachers-list', [
-        { key: 'name', label: 'Омӯзгор' }, { key: 'subject', label: 'Фан' }
-      ]);
-      document.getElementById('stat-students').textContent = getRecords('students').length;
-      document.getElementById('stat-teachers').textContent = getRecords('teachers').length;
+    async function loadTable(key) {
+      const config = tables[key];
+      const result = document.getElementById(config.result);
+
+      if (!db) {
+        result.textContent =
+          "Аввал URL ва Publishable key-и Supabase-ро дуруст гузоред.";
+        return;
+      }
+
+      result.textContent = "Маълумот бор шуда истодааст...";
+
+      try {
+        const { data, error } = await db
+          .from(config.table)
+          .select("*")
+          .limit(100);
+
+        if (error) {
+          result.textContent = "Хатои база: " + error.message;
+          return;
+        }
+
+        if (data.length > 0) {
+          renderTable(
+            result,
+            data,
+            Object.keys(data[0])
+          );
+        } else {
+          result.textContent = "Ҷадвал холӣ аст.";
+        }
+      } catch (error) {
+        result.textContent = "Хатои пайвастшавӣ ба база.";
+      }
     }
 
-    document.querySelectorAll('.tab-btn').forEach(button => {
-      button.addEventListener('click', () => switchTab(button.dataset.target));
-    });
-
-    document.querySelectorAll('[data-open]').forEach(button => {
-      button.addEventListener('click', () => switchTab(button.dataset.open));
-    });
-
-    document.querySelectorAll('[data-modal]').forEach(button => {
-      button.addEventListener('click', () => openModal(button.dataset.modal));
-    });
-
-    document.querySelectorAll('[data-close]').forEach(button => {
-      button.addEventListener('click', () => closeModal(button.dataset.close));
-    });
-
-    document.getElementById('save-student').addEventListener('click', addStudent);
-    document.getElementById('save-lesson').addEventListener('click', addLesson);
-    document.getElementById('save-grade').addEventListener('click', addGrade);
-    document.getElementById('save-teacher').addEventListener('click', addTeacher);
-
-    document.querySelectorAll('.modal').forEach(modal => {
-      modal.addEventListener('click', event => {
-        if (event.target === modal) closeModal(modal.id);
+    document.querySelectorAll("[data-load]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        loadTable(button.dataset.load);
       });
     });
 
-    renderAll();
-    switchTab('home');
+    async function checkConnection() {
+      if (!db) {
+        setStatus(
+          "URL ё Publishable key ворид нашудааст. Қиматҳои Supabase-ро санҷед."
+        );
+        return;
+      }
+
+      setStatus("Пайвастшавӣ санҷида мешавад...");
+
+      try {
+        const results = await Promise.all(
+          Object.entries(tables).map(async function (entry) {
+            const key = entry[0];
+            const config = entry[1];
+
+            const { count, error } = await db
+              .from(config.table)
+              .select("*", { count: "exact", head: true });
+
+            return { key, count, error };
+          })
+        );
+
+        const errors = results.filter(function (item) {
+          return item.error;
+        });
+
+        results.forEach(function (item) {
+          if (!item.error) {
+            document.getElementById(
+              tables[item.key].count
+            ).textContent = item.count ?? 0;
+          }
+        });
+
+        if (errors.length > 0) {
+          setStatus(
+            "Пайвастшавӣ ҳаст, аммо баъзе ҷадвалҳо дастрас нестанд. " +
+            errors.map(function (item) {
+              return item.key + ": " + item.error.message;
+            }).join(" | ")
+          );
+        } else {
+          setStatus(
+            "Пайвастшавӣ муваффақ шуд! Ҳамаи чор ҷадвал дастрасанд."
+          );
+        }
+      } catch (error) {
+        setStatus("Хатои пайвастшавӣ. URL ва калидро санҷед.");
+      }
+    }
+
+    document.getElementById("checkConnection").addEventListener(
+      "click",
+      checkConnection
+    );
   </script>
 </body>
 </html>
