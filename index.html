@@ -1,501 +1,1188 @@
-
 <!DOCTYPE html>
 <html lang="tg">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#102c57">
-  <title>UniSystem TJ | Системаи донишгоҳӣ</title>
-
+  <meta name="theme-color" content="#0b1730">
+  <title>UniSystem TJ Premium — Системаи донишгоҳӣ</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
-      --primary: #123b72;
-      --secondary: #1769d2;
-      --background: #f1f5f9;
-      --white: #ffffff;
-      --text: #172033;
-      --muted: #64748b;
-      --border: #e2e8f0;
+      --bg: #f4f7fc;
+      --panel: #fff;
+      --panel2: #f8faff;
+      --text: #17233b;
+      --muted: #71809b;
+      --line: #e4eaf4;
+      --primary: #315efb;
+      --primary2: #2448d8;
+      --nav: #101d39;
+      --green: #0d9b73;
+      --red: #e04f5f;
+      --amber: #b7791f;
+      --shadow: 0 12px 36px #1d31500b;
+      --radius: 18px
     }
 
     * {
-      box-sizing: border-box;
+      box-sizing: border-box
+    }
+
+    html {
+      scroll-behavior: smooth
     }
 
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
+      background: var(--bg);
       color: var(--text);
-      background: var(--background);
+      font: 15px/1.5 Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Arial, sans-serif
     }
 
-    header {
-      padding: 22px 16px;
-      background: linear-gradient(135deg, #102c57, #1769d2);
-      color: white;
-    }
-
-    .header-inner {
-      max-width: 1100px;
-      margin: auto;
-    }
-
-    .brand {
-      font-size: 26px;
-      font-weight: bold;
-    }
-
-    header p {
-      margin-bottom: 0;
-      line-height: 1.6;
-    }
-
-    nav {
-      display: flex;
-      gap: 8px;
-      padding: 12px 16px;
-      background: white;
-      border-bottom: 1px solid var(--border);
-      overflow-x: auto;
-    }
-
-    nav button {
-      width: auto;
-      flex-shrink: 0;
-      background: #eaf1fb;
-      color: var(--primary);
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit
     }
 
     button {
-      border: 0;
-      padding: 12px 16px;
-      border-radius: 9px;
-      background: var(--secondary);
-      color: white;
-      font-size: 15px;
       cursor: pointer;
+      border: 0
     }
 
     button:disabled {
-      opacity: 0.6;
-      cursor: wait;
+      opacity: .55;
+      cursor: not-allowed
     }
 
-    .container {
-      max-width: 1100px;
-      margin: 24px auto;
-      padding: 0 16px;
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 250px minmax(0, 1fr)
+    }
+
+    .sidebar {
+      background: linear-gradient(180deg, #101d39, #15274a);
+      color: #eaf0ff;
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 26px
+    }
+
+    .brand {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding: 0 8px
+    }
+
+    .brandmark {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #6c8bff, #315efb);
+      font-size: 22px;
+      box-shadow: 0 8px 22px #315efb55
+    }
+
+    .brand strong {
+      display: block;
+      font-size: 17px;
+      letter-spacing: .2px
+    }
+
+    .brand small {
+      color: #a8b8d8;
+      font-size: 11px
+    }
+
+    .navlabel {
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #8092b6;
+      padding: 0 12px;
+      margin-bottom: 8px
+    }
+
+    .nav {
+      display: grid;
+      gap: 6px
+    }
+
+    .nav button {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-align: left;
+      color: #c4d0e8;
+      background: transparent;
+      padding: 12px;
+      border-radius: 12px;
+      width: 100%;
+      transition: .2s
+    }
+
+    .nav button:hover,
+    .nav button.active {
+      background: #ffffff16;
+      color: white
+    }
+
+    .nav button.active {
+      box-shadow: inset 3px 0 #7390ff
+    }
+
+    .nav .ico {
+      width: 22px;
+      text-align: center;
+      font-size: 17px
+    }
+
+    .sidebottom {
+      margin-top: auto;
+      padding: 15px;
+      border: 1px solid #ffffff1b;
+      background: #ffffff0a;
+      border-radius: 14px;
+      font-size: 12px;
+      color: #b8c6e1
+    }
+
+    .sidebottom b {
+      display: block;
+      color: white;
+      font-size: 13px;
+      margin-bottom: 4px
+    }
+
+    .main {
+      min-width: 0
+    }
+
+    .topbar {
+      height: 78px;
+      background: #ffffffd9;
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 30px;
+      position: sticky;
+      top: 0;
+      z-index: 5
+    }
+
+    .crumb {
+      font-size: 12px;
+      color: var(--muted)
+    }
+
+    .topbar h1 {
+      font-size: 20px;
+      margin: 2px 0 0
+    }
+
+    .topactions {
+      display: flex;
+      align-items: center;
+      gap: 10px
+    }
+
+    .iconbtn {
+      width: 40px;
+      height: 40px;
+      border: 1px solid var(--line);
+      background: white;
+      border-radius: 12px;
+      color: var(--text)
+    }
+
+    .avatar {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 13px;
+      background: #e6edff;
+      color: #315efb;
+      font-weight: 800
+    }
+
+    .content {
+      padding: 28px;
+      max-width: 1500px;
+      margin: auto
     }
 
     .welcome {
-      padding: 24px;
+      position: relative;
+      overflow: hidden;
+      padding: 28px 30px;
+      border-radius: 22px;
       color: white;
-      background: var(--primary);
-      border-radius: 16px;
-      line-height: 1.7;
+      background: linear-gradient(115deg, #162b57, #315efb);
+      box-shadow: 0 18px 35px #315efb25
+    }
+
+    .welcome:after {
+      content: "";
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      border: 42px solid #ffffff10;
+      border-radius: 50%;
+      right: -55px;
+      top: -115px
+    }
+
+    .welcome h2 {
+      font-size: 25px;
+      margin: 0 0 8px
+    }
+
+    .welcome p {
+      margin: 0;
+      color: #dce6ff;
+      max-width: 650px
+    }
+
+    .welcome .tag {
+      display: inline-flex;
+      margin-top: 18px;
+      border: 1px solid #ffffff45;
+      border-radius: 100px;
+      padding: 5px 10px;
+      font-size: 11px;
+      background: #ffffff10
+    }
+
+    .sectionhead {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin: 28px 0 14px
+    }
+
+    .sectionhead h2 {
+      font-size: 17px;
+      margin: 0
+    }
+
+    .sectionhead p {
+      font-size: 12px;
+      color: var(--muted);
+      margin: 3px 0 0
     }
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
-      gap: 14px;
-      margin: 20px 0;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px
     }
 
-    .card {
-      padding: 20px;
-      border-radius: 14px;
-      background: var(--white);
-      box-shadow: 0 3px 12px #00000008;
-      overflow-wrap: anywhere;
+    .stat {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 17px;
+      padding: 19px;
+      box-shadow: var(--shadow);
+      min-width: 0
     }
 
-    .number {
-      margin-top: 10px;
-      font-size: 28px;
-      font-weight: bold;
-      color: var(--secondary);
-    }
-
-    .section {
-      margin-top: 20px;
-      padding: 20px;
-      background: white;
-      border-radius: 14px;
-    }
-
-    .section h2 {
-      margin-top: 0;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    .status {
-      padding: 12px;
-      border-radius: 9px;
-      background: #eff6ff;
-      color: var(--primary);
-      line-height: 1.6;
-      overflow-wrap: anywhere;
-    }
-
-    .muted {
+    .stathead {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       color: var(--muted);
-      line-height: 1.7;
+      font-size: 12px
     }
 
-    .table-wrap {
-      width: 100%;
-      overflow-x: auto;
+    .staticon {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: #eef2ff;
+      font-size: 18px
+    }
+
+    .statnum {
+      font-size: 29px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-top: 12px
+    }
+
+    .statfoot {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 3px
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      min-width: 0
+    }
+
+    .panel h3 {
+      font-size: 15px;
+      margin: 0
+    }
+
+    .panel .sub {
+      font-size: 12px;
+      color: var(--muted);
+      margin: 4px 0 0
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(260px, .8fr);
+      gap: 16px
+    }
+
+    .quick {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 16px
+    }
+
+    .quick button {
+      padding: 14px;
+      text-align: left;
+      border: 1px solid var(--line);
+      background: var(--panel2);
+      border-radius: 13px;
+      color: var(--text)
+    }
+
+    .quick button:hover {
+      border-color: #aabaff;
+      background: #f1f4ff
+    }
+
+    .quick b {
+      display: block;
+      font-size: 13px;
+      margin-top: 7px
+    }
+
+    .quick small {
+      font-size: 11px;
+      color: var(--muted)
+    }
+
+    .page {
+      display: none
+    }
+
+    .page.active {
+      display: block
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin: 16px 0
+    }
+
+    .field {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--text);
+      border-radius: 11px;
+      padding: 10px 12px;
+      min-height: 42px;
+      outline: none;
+      max-width: 100%
+    }
+
+    .field:focus {
+      border-color: #8197ff;
+      box-shadow: 0 0 0 3px #315efb18
+    }
+
+    .search {
+      flex: 1;
+      min-width: 190px
+    }
+
+    .btn {
+      padding: 10px 14px;
+      border-radius: 11px;
+      background: var(--primary);
+      color: white;
+      font-weight: 650;
+      transition: .18s
+    }
+
+    .btn:hover {
+      background: var(--primary2);
+      transform: translateY(-1px)
+    }
+
+    .btn.secondary {
+      background: var(--panel);
+      color: var(--text);
+      border: 1px solid var(--line)
+    }
+
+    .btn.danger {
+      background: #fff0f1;
+      color: #c72f43
+    }
+
+    .btn.success {
+      background: var(--green)
+    }
+
+    .btn.small {
+      padding: 7px 10px;
+      font-size: 12px;
+      border-radius: 9px
+    }
+
+    .tablewrap {
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 13px
     }
 
     table {
-      width: 100%;
       border-collapse: collapse;
-      margin-top: 12px;
+      width: 100%;
+      min-width: 640px;
+      background: var(--panel)
     }
 
-    th, td {
-      padding: 12px;
-      border-bottom: 1px solid var(--border);
+    th,
+    td {
       text-align: left;
-      white-space: nowrap;
+      padding: 13px 14px;
+      border-bottom: 1px solid var(--line);
+      font-size: 13px;
+      white-space: nowrap
     }
 
     th {
-      background: #f8fafc;
+      background: var(--panel2);
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .4px
     }
 
-    footer {
-      padding: 24px 16px;
+    tr:last-child td {
+      border-bottom: 0
+    }
+
+    tbody tr:hover {
+      background: #f8faff
+    }
+
+    .empty {
       text-align: center;
       color: var(--muted);
+      padding: 30px !important
     }
 
-    @media (max-width: 500px) {
+    .badge {
+      display: inline-block;
+      border-radius: 100px;
+      padding: 4px 8px;
+      background: #eaf8f2;
+      color: #087b59;
+      font-size: 11px;
+      font-weight: 700
+    }
+
+    .badge.warn {
+      background: #fff5df;
+      color: #95630d
+    }
+
+    .badge.red {
+      background: #fff0f1;
+      color: #c72f43
+    }
+
+    .notice {
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: #eef4ff;
+      color: #2747a6;
+      font-size: 13px;
+      margin: 12px 0;
+      overflow-wrap: anywhere
+    }
+
+    .notice.error {
+      background: #fff0f1;
+      color: #a92b3b
+    }
+
+    .notice.ok {
+      background: #eaf8f2;
+      color: #087b59
+    }
+
+    .hidden {
+      display: none !important
+    }
+
+    .muted {
+      color: var(--muted)
+    }
+
+    .footer {
+      padding: 24px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 11px
+    }
+
+    .modalback {
+      position: fixed;
+      inset: 0;
+      background: #0b173077;
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      z-index: 20
+    }
+
+    .modalback.open {
+      display: flex
+    }
+
+    .modal {
+      width: min(600px, 100%);
+      max-height: 90vh;
+      overflow: auto;
+      background: var(--panel);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 25px 80px #0003
+    }
+
+    .modalhead {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px
+    }
+
+    .modalhead h2 {
+      font-size: 18px;
+      margin: 0
+    }
+
+    .formgrid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px
+    }
+
+    .formrow {
+      display: grid;
+      gap: 6px
+    }
+
+    .formrow.full {
+      grid-column: 1/-1
+    }
+
+    .formrow label {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 650
+    }
+
+    .formrow .field {
+      width: 100%
+    }
+
+    .modalfoot {
+      display: flex;
+      justify-content: flex-end;
+      gap: 9px;
+      margin-top: 20px
+    }
+
+    .toast {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      background: #142342;
+      color: white;
+      padding: 13px 17px;
+      border-radius: 13px;
+      box-shadow: 0 10px 35px #0002;
+      z-index: 50;
+      max-width: min(400px, calc(100vw - 44px));
+      display: none
+    }
+
+    .toast.show {
+      display: block;
+      animation: fade .2s ease
+    }
+
+    @keyframes fade {
+      from {
+        opacity: 0;
+        transform: translateY(8px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    .connection {
+      display: flex;
+      gap: 9px;
+      align-items: center;
+      font-size: 12px;
+      color: var(--muted)
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #c6cbd5
+    }
+
+    .dot.online {
+      background: #10b981
+    }
+
+    .dot.offline {
+      background: #e04f5f
+    }
+
+    body.dark {
+      --bg: #0d1424;
+      --panel: #131e32;
+      --panel2: #17243a;
+      --text: #e8eefb;
+      --muted: #93a3bf;
+      --line: #263550;
+      --shadow: 0 12px 36px #0000001c
+    }
+
+    body.dark .topbar {
+      background: #111c2ee8
+    }
+
+    body.dark .iconbtn,
+    body.dark .field {
+      background: var(--panel);
+      color: var(--text)
+    }
+
+    body.dark tbody tr:hover {
+      background: #17243a
+    }
+
+    body.dark .quick button {
+      background: var(--panel2);
+      color: var(--text)
+    }
+
+    body.dark .staticon {
+      background: #202e4c
+    }
+
+    body.dark .avatar {
+      background: #25345a;
+      color: #b7c6ff
+    }
+
+    body.dark .btn.danger {
+      background: #44212a;
+      color: #ffb3bb
+    }
+
+    @media(max-width:1100px) {
+      .app {
+        grid-template-columns: 215px minmax(0, 1fr)
+      }
+
+      .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr))
+      }
+
+      .content {
+        padding: 22px
+      }
+
+      .topbar {
+        padding: 0 22px
+      }
+    }
+
+    @media(max-width:760px) {
+      .app {
+        grid-template-columns: 1fr
+      }
+
+      .sidebar {
+        padding: 12px;
+        gap: 12px
+      }
+
       .brand {
-        font-size: 23px;
+        padding: 0 4px
+      }
+
+      .sidebottom {
+        display: none
+      }
+
+      .navlabel {
+        display: none
+      }
+
+      .nav {
+        display: flex;
+        overflow: auto
+      }
+
+      .nav button {
+        width: auto;
+        flex: 0 0 auto;
+        padding: 10px
+      }
+
+      .nav button .navtext {
+        display: inline
+      }
+
+      .topbar {
+        height: 68px;
+        padding: 0 16px
+      }
+
+      .content {
+        padding: 16px
       }
 
       .welcome {
-        padding: 18px;
+        padding: 22px
       }
 
-      .section, .card {
-        padding: 16px;
+      .welcome h2 {
+        font-size: 21px
+      }
+
+      .split {
+        grid-template-columns: 1fr
+      }
+
+      .topactions .connection {
+        display: none
+      }
+    }
+
+    @media(max-width:480px) {
+      .grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px
+      }
+
+      .stat {
+        padding: 14px
+      }
+
+      .statnum {
+        font-size: 24px
+      }
+
+      .stathead {
+        font-size: 11px
+      }
+
+      .staticon {
+        width: 32px;
+        height: 32px
+      }
+
+      .quick {
+        grid-template-columns: 1fr
+      }
+
+      .formgrid {
+        grid-template-columns: 1fr
+      }
+
+      .formrow.full {
+        grid-column: auto
+      }
+
+      .sectionhead {
+        align-items: flex-start;
+        flex-direction: column
+      }
+
+      .content {
+        padding: 12px
+      }
+
+      .panel {
+        padding: 14px
       }
     }
   </style>
 </head>
 
 <body>
-  <header>
-    <div class="header-inner">
-      <div class="brand">🎓 UniSystem TJ</div>
-      <p>Системаи электронии идоракунии донишгоҳ</p>
-      <p>Донишгоҳи инноватсионии шаҳри Кӯлоб</p>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brandmark">🎓</div>
+        <div><strong>UniSystem TJ</strong><small>PREMIUM • CAMPUS OS</small></div>
+      </div>
+      <div>
+        <div class="navlabel">Менюи асосӣ</div>
+        <div class="nav">
+          <button class="active" data-page="home"><span class="ico">▦</span><span class="navtext">Панели
+              идоракунӣ</span></button>
+          <button data-page="student"><span class="ico">♙</span><span class="navtext">Донишҷӯён</span></button>
+          <button data-page="teacher"><span class="ico">♧</span><span class="navtext">Омӯзгорон</span></button>
+          <button data-page="courses"><span class="ico">▤</span><span class="navtext">Фанҳо</span></button>
+          <button data-page="grades"><span class="ico">✎</span><span class="navtext">Баҳоҳо</span></button>
+        </div>
+      </div>
+      <div class="sidebottom"><b>UniSystem TJ</b>Системаи ягонаи маълумоти таълимӣ<br><span id="sideVersion">Frontend
+          edition 1.0</span></div>
+    </aside>
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <div class="crumb">ДОНИШГОҲ / <span id="crumb">ПАНЕЛИ ИДОРАКУНӢ</span></div>
+          <h1 id="pageTitle">Панели идоракунӣ</h1>
+        </div>
+        <div class="topactions">
+          <div class="connection"><span class="dot" id="connectionDot"></span><span id="connectionText">Пайвастшавӣ
+              санҷида нашудааст</span></div><button class="iconbtn" id="themeBtn" title="Иваз кардани мавзӯъ">☾</button>
+          <div class="avatar">U</div>
+        </div>
+      </header>
+      <div class="content">
+        <section class="page active" id="home">
+          <div class="welcome">
+            <h2>Хуш омадед ба UniSystem TJ</h2>
+            <p>Ҳамаи маълумоти таълимиро аз як панели муосир идора кунед. Донишҷӯён, омӯзгорон, фанҳо ва натиҷаҳои
+              таълимӣ дар як ҷо.</p><span class="tag">✦ PREMIUM INTERFACE</span>
+          </div>
+          <div class="sectionhead">
+            <div>
+              <h2>Нишондиҳандаҳои умумӣ</h2>
+              <p>Маълумот аз база ё аз ҳолати намоишӣ</p>
+            </div><button class="btn secondary" id="refreshBtn">↻ Навсозӣ</button>
+          </div>
+          <div class="grid">
+            <div class="stat">
+              <div class="stathead"><span>Донишҷӯён</span><span class="staticon">♙</span></div>
+              <div class="statnum" id="studentCount">—</div>
+              <div class="statfoot">Шумораи сабтҳо</div>
+            </div>
+            <div class="stat">
+              <div class="stathead"><span>Омӯзгорон</span><span class="staticon">♧</span></div>
+              <div class="statnum" id="teacherCount">—</div>
+              <div class="statfoot">Шумораи сабтҳо</div>
+            </div>
+            <div class="stat">
+              <div class="stathead"><span>Фанҳо</span><span class="staticon">▤</span></div>
+              <div class="statnum" id="courseCount">—</div>
+              <div class="statfoot">Фанҳои таълимӣ</div>
+            </div>
+            <div class="stat">
+              <div class="stathead"><span>Баҳоҳо</span><span class="staticon">✎</span></div>
+              <div class="statnum" id="gradeCount">—</div>
+              <div class="statfoot">Натиҷаҳои сабтшуда</div>
+            </div>
+          </div>
+          <div class="sectionhead">
+            <div>
+              <h2>Дастрасии зуд</h2>
+              <p>Ба амалиёти асосӣ зуд гузаред</p>
+            </div>
+          </div>
+          <div class="split">
+            <div class="panel">
+              <h3>Оғози кор</h3>
+              <p class="sub">Бахши лозимиро интихоб кунед</p>
+              <div class="quick">
+                <button data-goto="student"><span>♙</span><b>Донишҷӯён</b><small>Рӯйхат, ҷустуҷӯ ва
+                    идоракунӣ</small></button>
+                <button data-goto="teacher"><span>♧</span><b>Омӯзгорон</b><small>Маълумоти ҳайати
+                    омӯзгорӣ</small></button>
+                <button data-goto="courses"><span>▤</span><b>Фанҳо</b><small>Фанҳо ва синфхонаҳо</small></button>
+                <button data-goto="grades"><span>✎</span><b>Баҳоҳо</b><small>Натиҷаҳои таълимӣ</small></button>
+              </div>
+            </div>
+            <div class="panel">
+              <h3>Ҳолати система</h3>
+              <p class="sub">Маълумот дар бораи манбаи маълумот</p>
+              <div id="homeStatus" class="notice">Барои санҷидани база тугмаи «Санҷиши пайвастшавӣ»-ро пахш кунед.</div>
+              <button class="btn" id="checkBtn">Санҷиши пайвастшавӣ</button>
+              <p class="sub" style="margin-top:12px">Муҳим: барои сабт/таҳрир/несткунӣ сиёсати дастрасии Supabase бояд
+                иҷозат диҳад.</p>
+            </div>
+          </div>
+        </section>
+        <section class="page" id="student">
+          <div class="sectionhead">
+            <div>
+              <h2>Донишҷӯён</h2>
+              <p>Ҷустуҷӯ ва идоракунии маълумоти донишҷӯён</p>
+            </div><button class="btn" data-add="student">＋ Иловаи донишҷӯ</button>
+          </div>
+          <div class="panel">
+            <div class="toolbar"><input class="field search" id="search-student"
+                placeholder="Ҷустуҷӯ аз рӯи ном ё маълумот…"><button class="btn secondary" data-reload="student">↻
+                Боркунӣ</button><button class="btn secondary" data-export="student">⇩ CSV</button></div>
+            <div id="studentNotice" class="notice">Маълумот ҳанӯз бор нашудааст.</div>
+            <div id="studentTable" class="tablewrap"></div>
+          </div>
+        </section>
+        <section class="page" id="teacher">
+          <div class="sectionhead">
+            <div>
+              <h2>Омӯзгорон</h2>
+              <p>Рӯйхати ҳайати омӯзгорӣ</p>
+            </div><button class="btn" data-add="teacher">＋ Иловаи омӯзгор</button>
+          </div>
+          <div class="panel">
+            <div class="toolbar"><input class="field search" id="search-teacher"
+                placeholder="Ҷустуҷӯ аз рӯи ном ё маълумот…"><button class="btn secondary" data-reload="teacher">↻
+                Боркунӣ</button><button class="btn secondary" data-export="teacher">⇩ CSV</button></div>
+            <div id="teacherNotice" class="notice">Маълумот ҳанӯз бор нашудааст.</div>
+            <div id="teacherTable" class="tablewrap"></div>
+          </div>
+        </section>
+        <section class="page" id="courses">
+          <div class="sectionhead">
+            <div>
+              <h2>Фанҳои таълимӣ</h2>
+              <p>Рӯйхати фанҳо ва синфхонаҳо</p>
+            </div><button class="btn" data-add="courses">＋ Иловаи фан</button>
+          </div>
+          <div class="panel">
+            <div class="toolbar"><input class="field search" id="search-courses"
+                placeholder="Ҷустуҷӯ аз рӯи фан ё синфхона…"><button class="btn secondary" data-reload="courses">↻
+                Боркунӣ</button><button class="btn secondary" data-export="courses">⇩ CSV</button></div>
+            <div id="coursesNotice" class="notice">Маълумот ҳанӯз бор нашудааст.</div>
+            <div id="coursesTable" class="tablewrap"></div>
+          </div>
+        </section>
+        <section class="page" id="grades">
+          <div class="sectionhead">
+            <div>
+              <h2>Баҳоҳо</h2>
+              <p>Натиҷаҳои таълимӣ ва баҳоҳои донишҷӯён</p>
+            </div><button class="btn" data-add="grades">＋ Иловаи баҳо</button>
+          </div>
+          <div class="panel">
+            <div class="toolbar"><input class="field search" id="search-grades"
+                placeholder="Ҷустуҷӯ аз рӯи донишҷӯ, фан ё баҳо…"><button class="btn secondary" data-reload="grades">↻
+                Боркунӣ</button><button class="btn secondary" data-export="grades">⇩ CSV</button></div>
+            <div id="gradesNotice" class="notice">Маълумот ҳанӯз бор нашудааст.</div>
+            <div id="gradesTable" class="tablewrap"></div>
+          </div>
+        </section>
+      </div>
+      <div class="footer">UniSystem TJ Premium © 2026 · Интерфейси Frontend</div>
+    </main>
+  </div>
+  <div class="modalback" id="modalBack">
+    <div class="modal">
+      <div class="modalhead">
+        <h2 id="modalTitle">Иловаи сабт</h2><button class="iconbtn" id="modalClose" type="button">✕</button>
+      </div>
+      <form id="recordForm">
+        <div class="formgrid" id="formFields"></div>
+        <div id="formError" class="notice error hidden"></div>
+        <div class="modalfoot"><button class="btn secondary" id="cancelBtn" type="button">Бекор кардан</button><button
+            class="btn" type="submit" id="saveBtn">Сабт кардан</button></div>
+      </form>
     </div>
-  </header>
-
-  <nav aria-label="Менюи асосӣ">
-    <button data-page="home">Асосӣ</button>
-    <button data-page="student">Донишҷӯён</button>
-    <button data-page="teacher">Омӯзгорон</button>
-    <button data-page="courses">Фанҳо</button>
-    <button data-page="grades">Баҳоҳо</button>
-  </nav>
-
-  <main class="container">
-    <section id="home" class="page">
-      <div class="welcome">
-        <h1>Хуш омадед!</h1>
-        <p>
-          UniSystem TJ — платформаи рақамӣ барои
-          идоракунии маълумоти донишҷӯён, омӯзгорон,
-          фанҳои таълимӣ ва баҳоҳо.
-        </p>
-      </div>
-
-      <div class="grid">
-        <div class="card">
-          <div>👨‍🎓 Донишҷӯён</div>
-          <div class="number" id="studentCount">—</div>
-        </div>
-        <div class="card">
-          <div>👨‍🏫 Омӯзгорон</div>
-          <div class="number" id="teacherCount">—</div>
-        </div>
-        <div class="card">
-          <div>📚 Фанҳо</div>
-          <div class="number" id="courseCount">—</div>
-        </div>
-        <div class="card">
-          <div>📝 Баҳоҳо</div>
-          <div class="number" id="gradeCount">—</div>
-        </div>
-      </div>
-
-      <div class="section">
-        <h2>Ҳолати базаи маълумот</h2>
-        <p id="connectionStatus" class="status">
-          Барои санҷиш тугмаро пахш кунед.
-        </p>
-        <button id="checkConnection">Санҷидани пайвастшавӣ</button>
-      </div>
-    </section>
-
-    <section id="student" class="page hidden">
-      <div class="section">
-        <h2>👨‍🎓 Донишҷӯён</h2>
-        <p class="muted">Маълумоти донишҷӯён аз база гирифта мешавад.</p>
-        <div id="studentResult" class="status">Ҳанӯз маълумот бор нашудааст.</div>
-        <button data-load="student">Бор кардани донишҷӯён</button>
-      </div>
-    </section>
-
-    <section id="teacher" class="page hidden">
-      <div class="section">
-        <h2>👨‍🏫 Омӯзгорон</h2>
-        <p class="muted">Маълумоти омӯзгорон аз база гирифта мешавад.</p>
-        <div id="teacherResult" class="status">Ҳанӯз маълумот бор нашудааст.</div>
-        <button data-load="teacher">Бор кардани омӯзгорон</button>
-      </div>
-    </section>
-
-    <section id="courses" class="page hidden">
-      <div class="section">
-        <h2>📚 Фанҳои таълимӣ</h2>
-        <p class="muted">Рӯйхати фанҳо ва синфхонаҳо.</p>
-        <div id="coursesResult" class="status">Ҳанӯз маълумот бор нашудааст.</div>
-        <button data-load="courses">Бор кардани фанҳо</button>
-      </div>
-    </section>
-
-    <section id="grades" class="page hidden">
-      <div class="section">
-        <h2>📝 Баҳоҳо</h2>
-        <p class="muted">Маълумоти баҳоҳо аз база гирифта мешавад.</p>
-        <div id="gradesResult" class="status">Ҳанӯз маълумот бор нашудааст.</div>
-        <button data-load="grades">Бор кардани баҳоҳо</button>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    UniSystem TJ © 2026 — Системаи донишгоҳӣ
-  </footer>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
+  </div>
+  <div class="toast" id="toast"></div>
   <script>
-    // Қиматҳои воқеии лоиҳаи Supabase-и худро гузоред.
-    const SUPABASE_URL = "https://tvokddgcrbmmvxzubnlp.supabase.co/rest/v1/";
-    const SUPABASE_KEY = "sb_publishable_L9Mk_uOqwfv5qPXo_L2NHA_FxCuv7qr";
+    (() => {
+      "use strict";
+      // Барои пайваст кардани база: URL ва publishable/anon key-и лоиҳаи худро гузоред.
+      // Калиди service_role-ро ҳеҷ гоҳ дар Frontend нагузоред.
+      const SUPABASE_URL = "https://YOUR_PROJECT.supabase.co";
+      const SUPABASE_KEY = "YOUR_SUPABASE_PUBLISHABLE_OR_ANON_KEY";
 
-    let db = null;
-
-    const isConfigured =
-      SUPABASE_URL.startsWith("https://") &&
-      SUPABASE_URL.endsWith(".supabase.co") &&
-      !SUPABASE_KEY.includes("_И_ТУ");
-
-    if (isConfigured && window.supabase) {
-      db = window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
-      );
-    }
-
-    const tables = {
-      student: {
-        table: "Student",
-        result: "studentResult",
-        count: "studentCount",
-        columns: ["id", "name"]
-      },
-      teacher: {
-        table: "Teacher",
-        result: "teacherResult",
-        count: "teacherCount",
-        columns: ["id", "name"]
-      },
-      courses: {
-        table: "Courses",
-        result: "coursesResult",
-        count: "courseCount",
-        columns: ["id", "title", "room"]
-      },
-      grades: {
-        table: "Grades",
-        result: "gradesResult",
-        count: "gradeCount",
-        columns: ["id", "student", "subject", "grade"]
-      }
-    };
-
-    function setStatus(message) {
-      document.getElementById("connectionStatus").textContent = message;
-    }
-
-    function showPage(pageId) {
-      document.querySelectorAll(".page").forEach(function (page) {
-        page.classList.toggle("hidden", page.id !== pageId);
-      });
-    }
-
-    document.querySelectorAll("[data-page]").forEach(function (button) {
-      button.addEventListener("click", function () {
-        showPage(button.dataset.page);
-      });
-    });
-
-    function addCell(row, value) {
-      const cell = document.createElement("td");
-      cell.textContent = value == null ? "" : String(value);
-      row.appendChild(cell);
-    }
-
-    function renderTable(container, rows, columns) {
-      container.replaceChildren();
-
-      if (!rows || rows.length === 0) {
-        container.textContent = "Дар ин ҷадвал ҳоло маълумот нест.";
-        return;
-      }
-
-      const wrap = document.createElement("div");
-      wrap.className = "table-wrap";
-
-      const table = document.createElement("table");
-      const thead = document.createElement("thead");
-      const headerRow = document.createElement("tr");
-
-      columns.forEach(function (column) {
-        addCell(headerRow, column);
-      });
-
-      thead.appendChild(headerRow);
-      table.appendChild(thead);
-
-      const tbody = document.createElement("tbody");
-
-      rows.forEach(function (item) {
-        const row = document.createElement("tr");
-
-        columns.forEach(function (column) {
-          addCell(row, item[column]);
-        });
-
-        tbody.appendChild(row);
-      });
-
-      table.appendChild(tbody);
-      wrap.appendChild(table);
-      container.appendChild(wrap);
-    }
-
-    async function loadTable(key) {
-      const config = tables[key];
-      const result = document.getElementById(config.result);
-
-      if (!db) {
-        result.textContent =
-          "Аввал URL ва Publishable key-и Supabase-ро дуруст гузоред.";
-        return;
-      }
-
-      result.textContent = "Маълумот бор шуда истодааст...";
-
-      try {
-        const { data, error } = await db
-          .from(config.table)
-          .select("*")
-          .limit(100);
-
-        if (error) {
-          result.textContent = "Хатои база: " + error.message;
-          return;
+      const config = {
+        student: {
+          label: "Донишҷӯён", table: "Student", count: "studentCount", notice: "studentNotice", wrap: "studentTable", search: "search-student", fields: [
+            { key: "name", label: "Номи пурра", required: true, placeholder: "Ному насаб" }
+          ]
+        },
+        teacher: {
+          label: "Омӯзгорон", table: "Teacher", count: "teacherCount", notice: "teacherNotice", wrap: "teacherTable", search: "search-teacher", fields: [
+            { key: "name", label: "Номи пурра", required: true, placeholder: "Ному насаб" }
+          ]
+        },
+        courses: {
+          label: "Фанҳо", table: "Courses", count: "courseCount", notice: "coursesNotice", wrap: "coursesTable", search: "search-courses", fields: [
+            { key: "title", label: "Номи фан", required: true, placeholder: "Масалан, Барномасозӣ" },
+            { key: "room", label: "Синфхона", placeholder: "Масалан, 204" }
+          ]
+        },
+        grades: {
+          label: "Баҳоҳо", table: "Grades", count: "gradeCount", notice: "gradesNotice", wrap: "gradesTable", fields: [
+            { key: "student", label: "Донишҷӯ", required: true, placeholder: "ID ё номи донишҷӯ" },
+            { key: "subject", label: "Фан", required: true, placeholder: "Номи фан" },
+            { key: "grade", label: "Баҳо", required: true, type: "number", min: 0, max: 100, placeholder: "0–100" }
+          ]
         }
-
-        if (data.length > 0) {
-          renderTable(
-            result,
-            data,
-            Object.keys(data[0])
-          );
-        } else {
-          result.textContent = "Ҷадвал холӣ аст.";
-        }
-      } catch (error) {
-        result.textContent = "Хатои пайвастшавӣ ба база.";
+      };
+      const cache = { student: [], teacher: [], courses: [], grades: [] };
+      let db = null, editing = null, currentPage = "home";
+      const $ = id => document.getElementById(id);
+      const esc = value => String(value ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+      const notify = message => { const el = $("toast"); el.textContent = message; el.classList.add("show"); clearTimeout(notify.timer); notify.timer = setTimeout(() => el.classList.remove("show"), 3200); };
+      function setConnection(online, message) { $("connectionDot").className = "dot " + (online ? "online" : "offline"); $("connectionText").textContent = message; }
+      function configured() {
+        return window.supabase && /^https:\/\/[^/]+\.supabase\.co\/?$/.test(SUPABASE_URL) &&
+          !SUPABASE_URL.includes("YOUR_PROJECT") && SUPABASE_KEY.length > 20 &&
+          !SUPABASE_KEY.includes("YOUR_SUPABASE");
       }
-    }
-
-    document.querySelectorAll("[data-load]").forEach(function (button) {
-      button.addEventListener("click", function () {
-        loadTable(button.dataset.load);
-      });
-    });
-
-    async function checkConnection() {
-      if (!db) {
-        setStatus(
-          "URL ё Publishable key ворид нашудааст. Қиматҳои Supabase-ро санҷед."
-        );
-        return;
+      if (configured()) db = window.supabase.createClient(SUPABASE_URL.replace(/\/$/, ""), SUPABASE_KEY);
+      function setNotice(key, msg, type = "") { const el = $(config[key].notice); el.className = "notice" + (type ? " " + type : ""); el.textContent = msg; }
+      function showPage(id) {
+        if (!config[id] && id !== "home") return;
+        currentPage = id; document.querySelectorAll(".page").forEach(p => p.classList.toggle("active", p.id === id));
+        document.querySelectorAll("[data-page]").forEach(b => b.classList.toggle("active", b.dataset.page === id));
+        const names = { home: "Панели идоракунӣ", student: "Донишҷӯён", teacher: "Омӯзгорон", courses: "Фанҳо", grades: "Баҳоҳо" };
+        $("pageTitle").textContent = names[id]; $("crumb").textContent = names[id].toLocaleUpperCase("tg");
       }
-
-      setStatus("Пайвастшавӣ санҷида мешавад...");
-
-      try {
-        const results = await Promise.all(
-          Object.entries(tables).map(async function (entry) {
-            const key = entry[0];
-            const config = entry[1];
-
-            const { count, error } = await db
-              .from(config.table)
-              .select("*", { count: "exact", head: true });
-
-            return { key, count, error };
-          })
-        );
-
-        const errors = results.filter(function (item) {
-          return item.error;
+      function addCell(row, value, head = false) { const el = document.createElement(head ? "th" : "td"); el.textContent = value == null ? "" : String(value); row.appendChild(el); }
+      function render(key) {
+        const c = config[key], wrap = $(c.wrap), query = ($(c.search).value || "").trim().toLocaleLowerCase();
+        const rows = cache[key].filter(item => !query || Object.values(item).some(v => String(v ?? "").toLocaleLowerCase().includes(query)));
+        wrap.replaceChildren();
+        if (!rows.length) { const p = document.createElement("div"); p.className = "empty"; p.textContent = query ? "Натиҷаи мувофиқ ёфт нашуд." : "Дар ин ҷадвал маълумот нест."; wrap.appendChild(p); return; }
+        const columns = [...new Set(rows.flatMap(Object.keys))];
+        const table = document.createElement("table"), thead = document.createElement("thead"), hr = document.createElement("tr");
+        columns.forEach(col => addCell(hr, col, true)); addCell(hr, "Амалиёт", true); thead.appendChild(hr); table.appendChild(thead);
+        const tbody = document.createElement("tbody");
+        rows.forEach(item => {
+          const tr = document.createElement("tr"); columns.forEach(col => addCell(tr, item[col]));
+          const td = document.createElement("td"), edit = document.createElement("button"), del = document.createElement("button");
+          edit.className = "btn secondary small"; edit.textContent = "Таҳрир"; edit.style.marginRight = "6px"; edit.addEventListener("click", () => openModal(key, item));
+          del.className = "btn danger small"; del.textContent = "Нест кардан"; del.addEventListener("click", () => removeRecord(key, item));
+          td.append(edit, del); tr.appendChild(td); tbody.appendChild(tr);
+        }); table.appendChild(tbody); wrap.appendChild(table);
+      }
+      async function load(key, quiet = false) {
+        if (!db) { setNotice(key, "Supabase танзим нашудааст. URL ва Publishable/anon key-ро дар аввали JavaScript ворид кунед."); if (!quiet) notify("Аввал пайвастшавии Supabase-ро танзим кунед."); return false; }
+        setNotice(key, "Маълумот бор шуда истодааст…");
+        try {
+          const { data, error } = await db.from(config[key].table).select("*").limit(1000);
+          if (error) throw error;
+          cache[key] = data || []; setNotice(key, `Боркунӣ анҷом ёфт: ${cache[key].length} сабт.`, "ok");
+          $(config[key].count).textContent = cache[key].length; render(key); return true;
+        } catch (e) { setNotice(key, "Хатои база: " + (e.message || "пайвастшавӣ иҷро нашуд"), "error"); if (!quiet) notify("Боркунии маълумот ноком шуд."); return false; }
+      }
+      async function refreshAll() {
+        if (!db) { setConnection(false, "Supabase танзим нашудааст"); $("homeStatus").className = "notice error"; $("homeStatus").textContent = "URL ва Publishable/anon key-и воқеии Supabase-ро дар аввали JavaScript гузоред."; return; }
+        $("homeStatus").className = "notice"; $("homeStatus").textContent = "Пайвастшавӣ санҷида мешавад…";
+        const results = await Promise.all(Object.keys(config).map(async key => {
+          try { const { count, error } = await db.from(config[key].table).select("*", { count: "exact", head: true }); if (error) throw error; $(config[key].count).textContent = count ?? 0; return { key, ok: true, count: count ?? 0 }; }
+          catch (e) { return { key, ok: false, error: e.message }; }
+        }));
+        const bad = results.filter(x => !x.ok);
+        if (!bad.length) { setConnection(true, "База пайваст аст"); $("homeStatus").className = "notice ok"; $("homeStatus").textContent = "Пайвастшавӣ муваффақ шуд. Ҳамаи чор ҷадвал дастрасанд."; notify("Пайвастшавӣ муваффақ шуд."); }
+        else { setConnection(false, "Баъзе ҷадвалҳо дастрас нестанд"); $("homeStatus").className = "notice error"; $("homeStatus").textContent = "Хатогиҳо: " + bad.map(x => x.key + ": " + x.error).join(" | "); notify("Пайвастшавӣ ё иҷозатҳои база мушкил доранд."); }
+      }
+      function openModal(key, item = null) {
+        if (!db) { notify("Барои илова ё таҳрир аввал Supabase-ро танзим кунед."); return; }
+        editing = item ? { key, item } : null; const c = config[key]; $("modalTitle").textContent = (item ? "Таҳрири сабт — " : "Иловаи сабт — ") + c.label; $("formFields").replaceChildren(); $("formError").classList.add("hidden");
+        c.fields.forEach(f => {
+          const row = document.createElement("div"); row.className = "formrow"; if (f.type === "textarea") row.classList.add("full");
+          const label = document.createElement("label"); label.htmlFor = "field-" + f.key; label.textContent = f.label + (f.required ? " *" : "");
+          const input = document.createElement(f.type === "textarea" ? "textarea" : "input"); input.id = "field-" + f.key; input.name = f.key; input.className = "field"; input.placeholder = f.placeholder || ""; input.required = !!f.required;
+          if (f.type !== "textarea") input.type = f.type || "text"; if (f.min !== undefined) input.min = f.min; if (f.max !== undefined) input.max = f.max;
+          input.value = item && item[f.key] != null ? item[f.key] : ""; row.append(label, input); $("formFields").appendChild(row);
         });
-
-        results.forEach(function (item) {
-          if (!item.error) {
-            document.getElementById(
-              tables[item.key].count
-            ).textContent = item.count ?? 0;
-          }
-        });
-
-        if (errors.length > 0) {
-          setStatus(
-            "Пайвастшавӣ ҳаст, аммо баъзе ҷадвалҳо дастрас нестанд. " +
-            errors.map(function (item) {
-              return item.key + ": " + item.error.message;
-            }).join(" | ")
-          );
-        } else {
-          setStatus(
-            "Пайвастшавӣ муваффақ шуд! Ҳамаи чор ҷадвал дастрасанд."
-          );
-        }
-      } catch (error) {
-        setStatus("Хатои пайвастшавӣ. URL ва калидро санҷед.");
+        $("modalBack").classList.add("open");
       }
-    }
-
-    document.getElementById("checkConnection").addEventListener(
-      "click",
-      checkConnection
-    );
+      function closeModal() { $("modalBack").classList.remove("open"); editing = null; $("recordForm").reset(); }
+      function primaryKey(item) { return item.id !== undefined ? { id: item.id } : null; }
+      async function saveRecord(e) {
+        e.preventDefault(); if (!db) return;
+        const key = editing ? editing.key : currentPage, c = config[key], payload = {};
+        c.fields.forEach(f => { const input = $("field-" + f.key); if (input && input.value.trim() !== "") payload[f.key] = f.type === "number" ? Number(input.value) : input.value.trim(); });
+        const err = $("formError"); err.classList.add("hidden");
+        if (c.fields.some(f => f.required && (payload[f.key] === undefined || payload[f.key] === ""))) { err.textContent = "Лутфан ҳамаи майдонҳои ҳатмиро пур кунед."; err.classList.remove("hidden"); return; }
+        $("saveBtn").disabled = true; $("saveBtn").textContent = "Сабт шуда истодааст…";
+        try {
+          let request;
+          if (editing) {
+            const pk = primaryKey(editing.item); if (!pk) throw new Error("Сабт майдони id надорад; таҳрири бехатар имконнопазир аст.");
+            request = db.from(c.table).update(payload).eq("id", editing.item.id);
+          } else request = db.from(c.table).insert(payload);
+          const { error } = await request; if (error) throw error;
+          closeModal(); await load(key, true); notify(editing ? "Сабт нав шуд." : "Сабт илова шуд.");
+        } catch (ex) { err.textContent = "Сабт иҷро нашуд: " + (ex.message || "хатои номаълум"); err.classList.remove("hidden"); }
+        finally { $("saveBtn").disabled = false; $("saveBtn").textContent = "Сабт кардан"; }
+      }
+      async function removeRecord(key, item) {
+        if (!db) { notify("Supabase танзим нашудааст."); return; }
+        if (item.id === undefined) { notify("Сабт id надорад; несткунии бехатар имконнопазир аст."); return; }
+        if (!confirm("Оё воқеан мехоҳед ин сабтро нест кунед? Ин амал метавонад баргардонида нашавад.")) return;
+        try { const { error } = await db.from(config[key].table).delete().eq("id", item.id); if (error) throw error; await load(key, true); notify("Сабт нест карда шуд."); }
+        catch (e) { notify("Несткунӣ ноком шуд: " + e.message); }
+      }
+      function exportCSV(key) {
+        const rows = cache[key]; if (!rows.length) { notify("Барои содирот маълумот нест. Аввал бор кунед."); return; }
+        const cols = [...new Set(rows.flatMap(Object.keys))], csv = [cols, ...rows.map(r => cols.map(c => r[c] ?? ""))].map(row => row.map(v => '"' + String(v).replace(/"/g, '""') + '"').join(",")).join("\r\n");
+        const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" }), url = URL.createObjectURL(blob), a = document.createElement("a"); a.href = url; a.download = config[key].table + ".csv"; a.click(); URL.revokeObjectURL(url); notify("Файли CSV омода шуд.");
+      }
+      document.querySelectorAll("[data-page]").forEach(b => b.addEventListener("click", () => showPage(b.dataset.page)));
+      document.querySelectorAll("[data-goto]").forEach(b => b.addEventListener("click", () => showPage(b.dataset.goto)));
+      document.querySelectorAll("[data-add]").forEach(b => b.addEventListener("click", () => openModal(b.dataset.add)));
+      document.querySelectorAll("[data-reload]").forEach(b => b.addEventListener("click", () => load(b.dataset.reload)));
+      document.querySelectorAll("[data-export]").forEach(b => b.addEventListener("click", () => exportCSV(b.dataset.export)));
+      Object.values(config).forEach(c => $(c.search).addEventListener("input", () => render(c === config.student ? "student" : c === config.teacher ? "teacher" : c === config.courses ? "courses" : "grades")));
+      $("checkBtn").addEventListener("click", refreshAll); $("refreshBtn").addEventListener("click", async () => { await refreshAll(); if (db) for (const k of Object.keys(config)) await load(k, true); });
+      $("modalClose").addEventListener("click", closeModal); $("cancelBtn").addEventListener("click", closeModal); $("recordForm").addEventListener("submit", saveRecord);
+      $("modalBack").addEventListener("click", e => { if (e.target === $("modalBack")) closeModal(); });
+      document.addEventListener("keydown", e => { if (e.key === "Escape") closeModal(); });
+      $("themeBtn").addEventListener("click", () => { document.body.classList.toggle("dark"); const dark = document.body.classList.contains("dark"); $("themeBtn").textContent = dark ? "☀" : "☾"; try { localStorage.setItem("unisystem-theme", dark ? "dark" : "light"); } catch (_) { } });
+      try { if (localStorage.getItem("unisystem-theme") === "dark") { document.body.classList.add("dark"); $("themeBtn").textContent = "☀"; } } catch (_) { }
+      if (db) { setConnection(false, "Омода барои санҷиш"); } else { setConnection(false, "Supabase танзим нашудааст"); }
+      // Дар ҳолати танзимшуда, рақамҳо пас аз санҷиши дастӣ бор мешаванд.
+    })();
   </script>
 </body>
+
 </html>
